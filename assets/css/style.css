@@ -1,3 +1,7 @@
+/* =========================================
+   Global
+========================================= */
+
 * {
     margin: 0;
     padding: 0;
@@ -6,35 +10,41 @@
 
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background: #0f172a;
-    color: white;
-    text-align: center;
-    padding-top: 120px;
+    background: #F8FAFC;
+    color: #1E293B;
 }
 
-h1 {
-    font-size: 56px;
-    margin-bottom: 20px;
+/* =========================================
+   Navigation
+========================================= */
+
+.navbar {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 30px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-p {
-    font-size: 22px;
-    margin-bottom: 15px;
-    color: #cbd5e1;
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+    color: #2563EB;
 }
 
-.button {
-    display: inline-block;
-    margin-top: 30px;
-    padding: 15px 35px;
-    font-size: 18px;
-    border-radius: 10px;
-    background: #2563eb;
+.contact-btn {
+    background: #2563EB;
     color: white;
     text-decoration: none;
-    transition: 0.3s;
+
+    padding: 12px 24px;
+    border-radius: 8px;
+
+    transition: 0.2s;
 }
 
-.button:hover {
-    background: #1d4ed8;
+.contact-btn:hover {
+    background: #1D4ED8;
 }
