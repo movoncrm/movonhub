@@ -48,3 +48,85 @@ body {
 .contact-btn:hover {
     background: #1D4ED8;
 }
+
+/* =========================================
+   Hero
+========================================= */
+
+.hero{
+
+    max-width:1200px;
+
+    margin:0 auto;
+
+    padding:100px 30px 120px;
+
+}
+
+.hero-content{
+
+    max-width:700px;
+
+}
+
+.hero-tag{
+
+    color:#2563EB;
+
+    font-weight:600;
+
+    margin-bottom:20px;
+
+}
+
+.hero h1{
+
+    font-size:64px;
+
+    line-height:1.1;
+
+    margin-bottom:30px;
+
+    color:#0F172A;
+
+}
+
+.hero-description{
+
+    font-size:22px;
+
+    line-height:1.7;
+
+    color:#64748B;
+
+    margin-bottom:45px;
+
+}
+
+.hero-btn{
+
+    display:inline-block;
+
+    text-decoration:none;
+
+    background:#2563EB;
+
+    color:white;
+
+    padding:18px 34px;
+
+    border-radius:10px;
+
+    font-size:18px;
+
+    font-weight:600;
+
+    transition:.25s;
+
+}
+
+.hero-btn:hover{
+
+    background:#1D4ED8;
+
+}
