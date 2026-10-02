@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
  * Remove once the launch is verified.
  */
 export async function GET() {
-  const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+  const rawUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || "";
   let supabaseHost: string | null = null;
   try {
     supabaseHost = rawUrl ? new URL(rawUrl).host : null;
