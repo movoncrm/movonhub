@@ -41,5 +41,19 @@ export async function GET() {
       (error instanceof Error ? error.message : JSON.stringify(error));
   }
 
-  return NextResponse.json({ ok: !dbError, env, advisorCount, dbError });
+  // Raw REST probe (no library) to reveal the real HTTP status/body.
+  let restStatus: number | null = null;
+  let restBody: string | null = null;
+  try {
+    const key = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+    const res = await fetch(`${rawUrl}/rest/v1/advisors?select=id&limit=1`, {
+      headers: { apikey: key, Authorization: `Bearer ${key}` },
+    });
+    restStatus = res.status;
+    restBody = (await res.text()).slice(0, 300);
+  } catch (error) {
+    restBody = error instanceof Error ? error.message : String(error);
+  }
+
+  return NextResponse.json({ ok: !dbError, env, advisorCount, dbError, restStatus, restBody });
 }
