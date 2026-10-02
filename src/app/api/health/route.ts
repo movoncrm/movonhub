@@ -41,19 +41,32 @@ export async function GET() {
       (error instanceof Error ? error.message : JSON.stringify(error));
   }
 
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+  const keyDiag = {
+    serviceKeyLength: serviceKey.length,
+    serviceKeyHasControlChar: /[^\x20-\x7E]/.test(serviceKey),
+  };
+
   // Raw REST probe (no library) to reveal the real HTTP status/body.
+  // Also probe with a sanitised key to detect paste corruption.
   let restStatus: number | null = null;
   let restBody: string | null = null;
+  let restCleanStatus: number | null = null;
   try {
-    const key = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
     const res = await fetch(`${rawUrl}/rest/v1/advisors?select=id&limit=1`, {
-      headers: { apikey: key, Authorization: `Bearer ${key}` },
+      headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` },
     });
     restStatus = res.status;
-    restBody = (await res.text()).slice(0, 300);
+    restBody = (await res.text()).slice(0, 200);
+
+    const clean = serviceKey.replace(/[^\x20-\x7E]/g, "").trim();
+    const res2 = await fetch(`${rawUrl}/rest/v1/advisors?select=id&limit=1`, {
+      headers: { apikey: clean, Authorization: `Bearer ${clean}` },
+    });
+    restCleanStatus = res2.status;
   } catch (error) {
     restBody = error instanceof Error ? error.message : String(error);
   }
 
-  return NextResponse.json({ ok: !dbError, env, advisorCount, dbError, restStatus, restBody });
+  return NextResponse.json({ ok: !dbError, env, keyDiag, advisorCount, dbError, restStatus, restCleanStatus, restBody });
 }
