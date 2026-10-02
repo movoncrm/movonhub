@@ -19,6 +19,8 @@ export const RESERVED_SLUGS = new Set([
   "contact",
   "privacy",
   "terms",
+  "disclaimer",
+  "legal",
   "sitemap",
   "robots",
   "manifest",
@@ -83,8 +85,9 @@ export const phoneSchema = z
 
 export const passwordSchema = z
   .string()
-  .min(6, "Password must be at least 6 characters.")
-  .max(100, "Password is too long.");
+  .min(8, "Password must be at least 8 characters.")
+  .max(100, "Password is too long.")
+  .refine((v) => /[A-Za-z]/.test(v) && /[0-9]/.test(v), "Use at least one letter and one number.");
 
 export const advisorRegisterSchema = z.object({
   name: z.string().trim().min(2, "Please enter your full name.").max(80),
@@ -182,6 +185,37 @@ export const productSchema = z.object({
   sourceUrl: z.string().trim().max(300).optional().or(z.literal("")),
 });
 
+/* ------------------------------------------------------------------ admin */
+
+export const contentLocaleSchema = z.enum(["en", "ms"]);
+export const contentScopeSchema = z.enum(["site", "sa_global", "sa"]);
+export const contentStatusSchema = z.enum(["draft", "published"]);
+export const advisorThemeSchema = z.enum(["light", "dark"]);
+export const advisorStatusSchema = z.enum(["draft", "published", "suspended"]);
+
+export const advisorSettingsSchema = z.object({
+  name: z.string().trim().min(2, "Name is required.").max(80),
+  title: z.string().trim().max(60).optional().or(z.literal("")),
+  phone: phoneSchema.optional(),
+  phoneDisplay: z.string().trim().max(30).optional().or(z.literal("")),
+  email: z.string().trim().email("Enter a valid email.").optional().or(z.literal("")),
+  bio: z.string().trim().max(600).optional().or(z.literal("")),
+  location: z.string().trim().max(80).optional().or(z.literal("")),
+  status: advisorStatusSchema.default("published"),
+  preferredTheme: advisorThemeSchema.default("light"),
+  defaultLocale: contentLocaleSchema.default("en"),
+  allowLanguageToggle: z.boolean().default(true),
+  allowThemeToggle: z.boolean().default(true),
+});
+
+/** Website copy values are plain text; length is bounded per field by the registry. */
+export const contentValueSchema = z.string().max(2000, "This text is too long.").default("");
+
+export function formBoolean(value: FormDataEntryValue | null): boolean {
+  return value === "on" || value === "true" || value === "1";
+}
+
 export type AdvisorRegisterInput = z.infer<typeof advisorRegisterSchema>;
 export type AdvisorUpdateInput = z.infer<typeof advisorUpdateSchema>;
 export type EnquiryInput = z.infer<typeof enquirySchema>;
+export type AdvisorSettingsInput = z.infer<typeof advisorSettingsSchema>;

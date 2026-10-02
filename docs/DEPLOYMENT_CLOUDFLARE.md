@@ -69,6 +69,7 @@ Secrets are server-side only and never committed. `NEXT_PUBLIC_*` are public.
 | `NEXT_PUBLIC_UNOPTIMIZED_IMAGES` | `false` | `true` | — | — |
 | `NEXT_PUBLIC_CONTACT_WHATSAPP` | optional | ✅ (var) | — | — |
 | `RESERVED_SLUGS` | optional | ✅ (var) | — | — |
+| `ALLOW_PUBLIC_REGISTRATION` | `false` | ✅ (var, keep `false`) | — | — |
 | `SESSION_SECRET` | ✅ | ✅ **secret** | secret | — |
 | `ADMIN_PASSWORD` | ✅ | ✅ **secret** | secret | — |
 | `DATA_ADAPTER` | `local` | `supabase` | — | — |
@@ -103,13 +104,19 @@ Production must run `DATA_ADAPTER=supabase`.
 **EXTERNAL / one-time setup:**
 
 1. Create a Supabase project.
-2. Apply the schema in order: `supabase/migrations/0001_init.sql` then
-   `supabase/migrations/0002_advisor_status_theme.sql` (SQL editor or `supabase db push`).
-   - Creates `advisors`, `categories`, `products`, `promotions`, `enquiries`, `settings`.
+2. Apply the schema in order: `supabase/migrations/0001_init.sql`, then
+   `supabase/migrations/0002_advisor_status_theme.sql`, then
+   `supabase/migrations/0003_security_content_settings.sql` (SQL editor or `supabase db push`).
+   - `0001` creates `advisors`, `categories`, `products`, `promotions`, `enquiries`, `settings`.
    - `0002` adds advisor `status` (draft/published/suspended) and `preferred_theme`, and tightens
      the public RLS read policy to `active = true and status = 'published'`.
-   - Enables RLS with public-read policies and insert-only enquiries.
+   - `0003` adds advisor `default_locale`, `allow_language_toggle`, `allow_theme_toggle`; creates
+     `site_content`, `audit_logs` and `rate_limits` plus the `consume_rate_limit` function;
+     replaces the wide advisor read policy with the safe `public_advisors` view; removes the
+     anonymous enquiry insert policy. See `docs/SECURITY_AUDIT.md`.
+   - Enables RLS.
    - Creates the public `advisor-photos` storage bucket.
+   - Apply the optional reference seed `supabase/seed.sql` last. It contains no credentials.
 3. Set `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`.
 4. Set `DATA_ADAPTER=supabase`.
 
@@ -140,29 +147,75 @@ prepare the repo. No commit/push has been performed.
 
 ## 7. DNS, SSL and wildcard subdomains
 
-**EXTERNAL — requires Cloudflare + registrar access.** Not configured or verified here.
+**EXTERNAL — requires Cloudflare + registrar access.** Wildcard subdomains are
+prepared in code but are **not live until the DNS record, certificate and Worker
+route below are configured and tested.** Do not claim wildcard support is live
+before then.
+
+### 7.1 Required DNS records
 
 | Record | Name | Content | Proxy |
 | --- | --- | --- | --- |
-| A / CNAME | `@` | Cloudflare Worker route (custom domain) | Proxied |
+| A / CNAME | `@` | Worker custom domain | Proxied |
 | CNAME | `www` | `movonhub.com.my` | Proxied |
 | CNAME | `*` | `movonhub.com.my` | Proxied (wildcard) |
 
-- SSL/TLS mode: **Full (strict)**. A **wildcard certificate** (`*.movonhub.com.my`)
-  is required for advisor subdomains — order via Cloudflare Advanced Certificate
-  (Total TLS / wildcard) so `nik.movonhub.com.my` is covered.
-- Attach the domains to the Worker by uncommenting `routes` in `wrangler.jsonc` and
-  deploying, or add custom domains in the dashboard.
+### 7.2 Exact Cloudflare dashboard steps
 
-**Routing logic (`src/middleware.ts`) — DONE (local):**
+1. DNS: zone `movonhub.com.my` -> DNS -> Records -> Add record.
+   - Type `CNAME`, Name `*`, Target `movonhub.com.my`, Proxy status **Proxied**. Save.
+   - Add `www` the same way if it is not already present.
+2. SSL/TLS: zone -> SSL/TLS -> Overview -> set encryption mode to **Full (strict)**.
+3. Certificate for wildcard: zone -> SSL/TLS -> Edge Certificates.
+   - Confirm a certificate covering `*.movonhub.com.my` is available. If it is not,
+     order one (Cloudflare Advanced Certificate with the wildcard hostname, or
+     Cloudflare Total TLS) and wait for it to become active. The default universal
+     certificate does not cover wildcard hostnames.
+4. Worker route: Workers & Pages -> the `movonhub` Worker -> Settings -> Domains & Routes
+   - Add custom domain `movonhub.com.my`.
+   - Add custom domain `www.movonhub.com.my`.
+   - Add custom domain `*.movonhub.com.my`.
+   - Alternatively uncomment the `routes` array in `wrangler.jsonc` and deploy.
+5. Wait for the certificate status to show Active, then test (section 7.4).
+
+### 7.3 Reserved subdomains and unknown advisors
+
+The middleware ignores these subdomains so they can never resolve to an advisor
+page: `www`, `api`, `admin`, `app`, `hub`, `login`, `register`, `dashboard`,
+`support`, `mail`, `assets`, `static`, `cdn`, `status`, `sso`, `disclaimer`,
+`legal`, plus any comma-separated values in the `RESERVED_SLUGS` environment
+variable. The same list (plus the public site paths) is enforced when a
+username is chosen.
+
+Advisor pages are resolved from Supabase by slug:
+- Published and active advisor: page loads.
+- Unknown slug: standard 404.
+- Draft advisor: 404.
+- Suspended advisor: generic "unavailable" page that does not confirm the account
+  exists.
+
+Because the middleware runs on the edge without database access, it only decides
+whether a hostname looks like an advisor subdomain. Ownership, publication state
+and existence are validated against Supabase by the page itself. No private or
+suspended account information is disclosed.
+
+### 7.4 Post-configuration tests
+
+- `https://nik.movonhub.com.my` loads Nik's page.
+- `https://nik.movonhub.com.my/products` loads the catalogue with the subdomain
+  preserved (path suffix rewrite).
+- `https://unknown-name.movonhub.com.my` returns 404.
+- `https://admin.movonhub.com.my` and `https://www.movonhub.com.my` do not render
+  an advisor page.
+- A suspended advisor's subdomain does not reveal the account.
+- `https://movonhub.com.my/sa/nik` still works as a compatibility route.
+
+**Routing logic (`src/middleware.ts`) — DONE (local, unverified in production
+until the steps above are complete):**
 - `movonhub.com.my/sa/{slug}` always works (compatibility route).
-- `{slug}.movonhub.com.my` is rewritten to `/sa/{slug}` (suffix/query preserved) and is the
-  **canonical** advisor URL (metadata, OG URL, share links, sitemap).
-- Reserved subdomains ignored: `www`, `api`, `app`, `admin`, `dashboard`, `hub`, `sa`, `login`,
-  `register`, `static`, `assets`, `support`, `mail`, `cdn`, `status`, `sso` (extendable via the
-  `RESERVED_SLUGS` env var, comma-separated).
+- `{slug}.movonhub.com.my` is rewritten to `/sa/{slug}` (suffix and query preserved)
+  and is the canonical advisor URL (metadata, OG URL, share links, sitemap).
 - `*.localhost` works in local development.
-- Unknown slugs 404; non-published advisors 404; suspended advisors show an unavailable page.
 
 ---
 
@@ -287,3 +340,48 @@ via the dashboard (Custom Domains).
 - `https://nik.movonhub.com.my/sa/nik` still works (compat) and `https://admin.movonhub.com.my`
   does not serve an advisor page.
 - Unknown subdomain → 404; `robots.txt` / `sitemap.xml` present; no horizontal overflow on mobile.
+
+---
+
+## 12. Phase 2 release - external steps (not performed here)
+
+Do not deploy as part of this phase until these steps are approved and done in
+order.
+
+1. Supabase
+   - Apply `supabase/migrations/0003_security_content_settings.sql`.
+   - Confirm the `public_advisors` view exists and that an anon key can no longer
+     select `password_hash` from `public.advisors`.
+   - Confirm the `consume_rate_limit`, `site_content`, `audit_logs` and
+     `rate_limits` objects exist.
+   - Take a backup before applying (see `docs/BACKUP_RECOVERY.md`).
+
+2. Cloudflare Worker environment
+   - Add/confirm vars: `DATA_ADAPTER=supabase`, `NEXT_PUBLIC_SITE_URL`,
+     `NEXT_PUBLIC_ROOT_DOMAIN`, `NEXT_PUBLIC_UNOPTIMIZED_IMAGES=true`,
+     `ALLOW_PUBLIC_REGISTRATION=false`.
+   - Confirm secrets: `SESSION_SECRET`, `ADMIN_PASSWORD`,
+     `SUPABASE_SERVICE_ROLE_KEY`.
+   - Set `SUPABASE_URL` at runtime (not only `NEXT_PUBLIC_SUPABASE_URL`, which is
+     inlined at build time).
+
+3. Wildcard subdomains
+   - Complete section 7 (DNS, wildcard certificate, Worker custom domains) and run
+     the section 7.4 tests.
+
+4. Verify password hashing on the Workers runtime
+   - After the first deploy, create an advisor from `/admin`, log out, and log in as
+     that advisor. If login fails due to `scrypt` being unavailable under
+     `nodejs_compat`, switch to Web Crypto PBKDF2 or Supabase Auth before onboarding
+     more advisors. This is tracked in `docs/SECURITY_AUDIT.md`.
+
+5. Content and disclaimers
+   - Publish main site and SA wording via `/admin/content`. See
+     `docs/CONTENT_EDITING_GUIDE.md`.
+   - Have Malaysian legal counsel review `/disclaimer`, `/privacy` and `/terms` and
+     fill in the entity, registration, address and contact placeholders.
+
+6. Verification
+   - Run the manual checks in `docs/SECURITY_AUDIT.md` section 5 (headers) and the
+     test matrix in the final report.
+   - No deployment, DNS or secret change has been made by this phase.

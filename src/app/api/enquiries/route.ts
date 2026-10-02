@@ -1,11 +1,17 @@
 import { handleError, fail, ok } from "@/lib/http";
-import { clientKey, rateLimit } from "@/lib/rateLimit";
+import { limitRequest } from "@/lib/rateLimit";
 import { recordEnquiry } from "@/lib/services/enquiries";
+
+const MAX_BODY_BYTES = 16 * 1024;
 
 export async function POST(request: Request) {
   try {
-    if (!rateLimit(clientKey(request, "enquiry"), 30, 60_000)) {
+    if (!(await limitRequest(request, "enquiry", 30, 60))) {
       return fail("Too many requests. Please try again shortly.", 429);
+    }
+    const declared = Number(request.headers.get("content-length") || "0");
+    if (declared > MAX_BODY_BYTES) {
+      return fail("Enquiry payload is too large.", 413);
     }
     const body = await request.json().catch(() => ({}));
     const result = await recordEnquiry(body);

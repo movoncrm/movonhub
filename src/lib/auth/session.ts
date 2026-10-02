@@ -3,7 +3,12 @@ import { cookies } from "next/headers";
 import type { SessionUser } from "@/lib/types";
 
 export const SESSION_COOKIE = "mh_session";
-const MAX_AGE_SECONDS = 60 * 60 * 24 * 30; // 30 days
+/**
+ * Short-lived sessions limit the blast radius of a leaked token. Logout clears
+ * the cookie; because sessions are stateless there is no server-side session
+ * store to revoke, so expiry is intentionally conservative.
+ */
+const MAX_AGE_SECONDS = 60 * 60 * 24 * 7; // 7 days
 
 function secret(): string {
   const s = process.env.SESSION_SECRET;
@@ -25,7 +30,7 @@ function sign(payload: string): string {
 }
 
 export function createSessionToken(user: SessionUser): string {
-  const body = { ...user, exp: Date.now() + MAX_AGE_SECONDS * 1000 };
+  const body = { ...user, iat: Date.now(), exp: Date.now() + MAX_AGE_SECONDS * 1000 };
   const payload = b64url(JSON.stringify(body));
   const sig = sign(payload);
   return `${payload}.${sig}`;
@@ -42,8 +47,9 @@ export function verifySessionToken(token?: string | null): SessionUser | null {
   try {
     const data = JSON.parse(Buffer.from(payload, "base64url").toString("utf8"));
     if (!data || typeof data.exp !== "number" || data.exp < Date.now()) return null;
-    const { exp, ...user } = data;
+    const { exp, iat, ...user } = data;
     void exp;
+    void iat;
     return user as SessionUser;
   } catch {
     return null;

@@ -48,6 +48,17 @@ export function AdvisorEditForm({ advisor }: { advisor: Advisor }) {
         <label className="field-label">{t("admin.sa.fieldEmail")}</label>
         <input name="email" type="email" defaultValue={advisor.email} className="field-input" />
       </div>
+      <div className="sm:col-span-2 mt-2 border-t border-borderline pt-3">
+        <p className="text-sm font-bold">{t("admin.personalPageSettings")}</p>
+        <p className="mb-3 mt-1 text-xs text-muted">{t("admin.personalPageSettingsBody")}</p>
+      </div>
+      <div>
+        <label className="field-label">{t("admin.fieldDefaultLanguage")}</label>
+        <select name="defaultLocale" defaultValue={advisor.defaultLocale || "en"} className="field-input">
+          <option value="en">English</option>
+          <option value="ms">Bahasa Melayu</option>
+        </select>
+      </div>
       <div>
         <label className="field-label">{t("admin.sa.fieldTheme")}</label>
         <select name="preferredTheme" defaultValue={advisor.preferredTheme || "light"} className="field-input">
@@ -55,6 +66,24 @@ export function AdvisorEditForm({ advisor }: { advisor: Advisor }) {
           <option value="dark">{t("admin.sa.themeDark")}</option>
         </select>
       </div>
+      <label className="flex items-center gap-2 text-sm">
+        <input
+          type="checkbox"
+          name="allowLanguageToggle"
+          defaultChecked={advisor.allowLanguageToggle !== false}
+          className="h-4 w-4"
+        />
+        {t("admin.fieldAllowLanguageToggle")}
+      </label>
+      <label className="flex items-center gap-2 text-sm">
+        <input
+          type="checkbox"
+          name="allowThemeToggle"
+          defaultChecked={advisor.allowThemeToggle !== false}
+          className="h-4 w-4"
+        />
+        {t("admin.fieldAllowThemeToggle")}
+      </label>
       <div>
         <label className="field-label">{t("admin.sa.fieldStatus")}</label>
         <select name="status" defaultValue={advisor.status} className="field-input">

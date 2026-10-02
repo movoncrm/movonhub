@@ -9,7 +9,9 @@ export async function Footer() {
   const links = [
     { href: "/", label: t("nav.home") },
     { href: "/sa/nik", label: t("nav.saSample") },
-    { href: "/login", label: t("nav.login") },
+    { href: "/disclaimer", label: t("disclaimer.title") },
+    { href: "/privacy", label: t("privacy.title") },
+    { href: "/terms", label: t("terms.title") },
   ];
 
   return (
@@ -35,7 +37,7 @@ export async function Footer() {
           <p>
             © {new Date().getFullYear()} MOVONHUB. {t("footer.rights")}
           </p>
-          <p className="max-w-2xl">{t("footer.disclaimer")}</p>
+          <p className="max-w-2xl">{t("legal.mainDisclaimer")}</p>
         </div>
       </div>
     </footer>

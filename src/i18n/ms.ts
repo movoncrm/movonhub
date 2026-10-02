@@ -73,6 +73,7 @@ const ms = {
     rights: "Hak cipta terpelihara.",
     disclaimer:
       "MOVONHUB bukan laman rasmi MOVON; ia diuruskan untuk kegunaan promosi Penasihat Jualan Movon yang sah. Nama produk, imej dan tanda dagangan milik pemilik masing-masing.",
+    disclaimerLink: "Baca penafian penuh",
   },
   home: {
     hero: {
@@ -169,6 +170,27 @@ const ms = {
     themeLight: "Cerah",
     themeDark: "Gelap",
     themeToggle: "Tukar tema",
+    seoTitle: "{name} | Penasihat Jualan Movon",
+    disclaimer:
+      "Laman ini dikendalikan oleh {name} sebagai Sales Advisor Movon. Laman ini merupakan halaman jualan dan pertanyaan peribadi, bukan laman web korporat rasmi Movon. Maklumat produk, ketersediaan, harga dan terma promosi hendaklah disahkan dengan pihak yang berkaitan sebelum pembelian.",
+    disclaimerLink: "Baca penafian penuh",
+  },
+  legal: {
+    mainDisclaimer:
+      "MOVONHUB ialah platform yang dikendalikan secara bebas bagi tujuan khidmat nasihat jualan dan penggunaan alat digital berkaitan. Platform ini bukan laman web korporat rasmi Movon atau pemilik jenamanya melainkan dinyatakan secara jelas. Semua tanda dagangan, nama produk dan aset jenama kekal sebagai hak milik pemilik masing-masing. Rujukan kepada produk Movon adalah bagi tujuan pengenalan produk dan pertanyaan jualan.",
+    entityName: "[Nama perniagaan atau entiti untuk disahkan]",
+    registration: "[Nombor pendaftaran untuk disahkan]",
+    address: "[Alamat berdaftar untuk disahkan]",
+    contact: "[Hubungan privasi atau perundangan untuk disahkan]",
+  },
+  disclaimer: {
+    eyebrow: "Perundangan",
+    title: "Penafian",
+    reviewNotice:
+      "Rangka kata ini adalah titik permulaan dan perlu disemak oleh penasihat undang-undang Malaysia sebelum digunakan. Ia tidak mewujudkan atau mengandaikan sebarang agensi, perkongsian atau sokongan.",
+    p1: "MOVONHUB ialah platform yang dikendalikan secara bebas bagi tujuan khidmat nasihat jualan dan penggunaan alat digital berkaitan. Platform ini bukan laman web korporat rasmi Movon atau pemilik jenamanya melainkan dinyatakan secara jelas.",
+    p2: "Semua tanda dagangan, nama produk dan aset jenama kekal sebagai hak milik pemilik masing-masing. Rujukan kepada produk Movon adalah bagi tujuan pengenalan produk dan pertanyaan jualan.",
+    p3: "Setiap Penasihat Jualan mengendalikan halaman peribadi masing-masing. Maklumat produk, ketersediaan, harga dan terma promosi hendaklah disahkan dengan pihak yang berkaitan sebelum pembelian.",
   },
   hub: {
     title: "Ruang Kerja SA",
@@ -477,6 +499,8 @@ const ms = {
       "Kata laluan disimpan menggunakan hashing scrypt bersalt. Akses ke kawasan advisor dan admin dikawal oleh kuki sesi HTTP-only yang ditandatangani serta pemeriksaan kebenaran di pihak pelayan.",
     p4:
       "Laman awam memaut ke servis luaran seperti WhatsApp dan laman rasmi Movon, yang mempunyai amalan privasi masing-masing. Dasar ini akan diperluas sebelum pelancaran awam.",
+    reviewNotice:
+      "Dasar ini adalah draf dan perlu disemak oleh penasihat undang-undang Malaysia sebelum digunakan. Nama perniagaan, nombor pendaftaran, alamat berdaftar dan hubungan privasi perlu dilengkapkan sebelum pelancaran.",
   },
   terms: {
     eyebrow: "Perundangan",
@@ -488,6 +512,8 @@ const ms = {
     p3:
       "Advisor bertanggungjawab terhadap ketepatan maklumat peribadi yang diterbitkan dan mematuhi garis panduan advisor Movon. MovonHub boleh menggantung profil yang melanggar terma ini.",
     p4: "Terma ini akan disemak dan dimuktamadkan sebelum pelancaran awam.",
+    reviewNotice:
+      "Terma ini adalah draf dan perlu disemak oleh penasihat undang-undang Malaysia sebelum digunakan. Nama perniagaan, nombor pendaftaran dan alamat berdaftar perlu dilengkapkan sebelum pelancaran.",
   },
   register: {
     title: "Bina halaman Penasihat Jualan",
@@ -505,7 +531,7 @@ const ms = {
     available: "Nama pengguna tersedia.",
     taken: "Nama pengguna ini telah digunakan.",
     password: "Kata laluan",
-    passwordPlaceholder: "Sekurang-kurangnya 6 aksara",
+    passwordPlaceholder: "Sekurang-kurangnya 8 aksara",
     passwordHint: "Digunakan untuk log masuk ke papan pemuka kemudian.",
     location: "Lokasi / kawasan perkhidmatan",
     locationPlaceholder: "Kuala Lumpur & Selangor",
@@ -580,6 +606,16 @@ const ms = {
     products: "Produk",
     promotions: "Promosi",
     settings: "Tetapan",
+    navContent: "Kandungan Laman",
+    navSecurity: "Keselamatan & Tetapan",
+    personalPageSettings: "Tetapan Halaman Peribadi",
+    personalPageSettingsBody:
+      "Pilih bahasa dan tema lalai untuk halaman advisor ini, dan tentukan sama ada pelawat boleh menukarnya.",
+    fieldDefaultLanguage: "Bahasa lalai",
+    fieldAllowLanguageToggle: "Benarkan pelawat tukar bahasa",
+    fieldAllowThemeToggle: "Benarkan pelawat tukar tema",
+    enabled: "Didayakan",
+    disabled: "Dimatikan",
     starAdvisors: "Penasihat Jualan",
     productCatalogue: "Katalog produk",
     activeAdvisors: "Advisor aktif",
@@ -685,6 +721,27 @@ const ms = {
       empty: "Belum ada SA didaftarkan.",
       resultsCount: "{count} SA",
     },
+    content: {
+      title: "Kandungan Laman",
+      intro: "Sunting teks yang dipaparkan di laman awam. Perubahan disimpan sebagai draf sehingga diterbitkan.",
+      chooseScope: "Apa yang ingin disunting?",
+      scopeSite: "Laman utama",
+      scopeSaGlobal: "Halaman SA (semua advisor)",
+      scopeSa: "Seorang advisor sahaja",
+      chooseAdvisor: "Pilih penasihat jualan",
+      loading: "Memuatkan kandungan…",
+      saveDraft: "Simpan draf",
+      publish: "Terbitkan",
+      revert: "Kembalikan kepada lalai",
+      preview: "Pratonton langsung",
+      unsaved: "Ada perubahan yang belum disimpan. Simpan atau terbitkan sebelum keluar.",
+      savedDraft: "Draf disimpan. Ia belum dipaparkan kepada awam.",
+      published: "Diterbitkan. Perubahan kini aktif.",
+      reverted: "Gantian dibuang. Rangka kata lalai dipaparkan semula.",
+      emptyHint: "Biarkan ruangan kosong untuk menggunakan rangka kata lalai.",
+      seoHint: "Ruangan ini mempengaruhi cara halaman dipaparkan dalam carian.",
+      noOverride: "Belum ada rangka kata tersuai. Teks lalai dipaparkan dalam pratonton.",
+    },
   },
   auth: {
     notAuthenticated: "Belum log masuk.",
@@ -695,6 +752,8 @@ const ms = {
     adminNotConfigured: "Log masuk admin tidak dikonfigurasi pada pelayan ini.",
     inactive: "Profil advisor ini tidak aktif. Sila hubungi pentadbir.",
     enterCredentials: "Masukkan nama pengguna dan kata laluan.",
+    tooManyAttempts: "Terlalu banyak percubaan. Sila tunggu beberapa minit dan cuba lagi.",
+    registrationDisabled: "Pendaftaran sendiri ditutup. Sila hubungi MOVONHUB untuk memohon halaman Penasihat Jualan.",
   },
 };
 

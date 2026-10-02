@@ -11,6 +11,9 @@ NEXT_PUBLIC_UNOPTIMIZED_IMAGES=true
 SESSION_SECRET=replace-with-a-long-random-string
 ADMIN_PASSWORD=replace-with-a-strong-password
 
+# Public self-registration is disabled unless this is "true".
+ALLOW_PUBLIC_REGISTRATION=false
+
 # On Cloudflare, the local JSON adapter is NOT durable. Use Supabase.
 DATA_ADAPTER=supabase
 NEXT_PUBLIC_SUPABASE_URL=

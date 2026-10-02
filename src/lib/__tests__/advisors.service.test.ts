@@ -14,14 +14,14 @@ describe("registerAdvisor", () => {
       name: "Test Advisor",
       phone: "0123456789",
       slug,
-      password: "secret1",
+      password: "secret12",
       bio: "Hello",
     });
     expect(result.ok).toBe(true);
     expect(result.data?.slug).toBe(slug);
     expect(result.data?.phone).toBe("60123456789");
-    expect(result.data?.passwordHash).not.toContain("secret1");
-    expect(verifyPassword("secret1", result.data!.passwordHash)).toBe(true);
+    expect(result.data?.passwordHash).not.toContain("secret12");
+    expect(verifyPassword("secret12", result.data!.passwordHash)).toBe(true);
   });
 
   it("rejects a duplicate username", async () => {
@@ -29,16 +29,16 @@ describe("registerAdvisor", () => {
       name: "Duplicate",
       phone: "0123456789",
       slug,
-      password: "secret1",
+      password: "secret12",
     });
     expect(result.ok).toBe(false);
     expect(result.fieldErrors?.slug).toBeTruthy();
   });
 
   it("rejects reserved usernames and invalid phones", async () => {
-    const reserved = await registerAdvisor({ name: "X", phone: "0123456789", slug: "admin", password: "secret1" });
+    const reserved = await registerAdvisor({ name: "X", phone: "0123456789", slug: "admin", password: "secret12" });
     expect(reserved.ok).toBe(false);
-    const badPhone = await registerAdvisor({ name: "X", phone: "123", slug: "validslug", password: "secret1" });
+    const badPhone = await registerAdvisor({ name: "X", phone: "123", slug: "validslug", password: "secret12" });
     expect(badPhone.ok).toBe(false);
   });
 

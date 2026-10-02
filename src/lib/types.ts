@@ -1,5 +1,32 @@
 export type Role = "advisor" | "admin";
 
+export type ContentLocale = "en" | "ms";
+export type ContentScope = "site" | "sa_global" | "sa";
+export type ContentStatus = "draft" | "published";
+
+export interface SiteContent {
+  id: string;
+  scope: ContentScope;
+  advisorId?: string;
+  contentKey: string;
+  locale: ContentLocale;
+  value: string;
+  status: ContentStatus;
+  updatedBy?: string;
+  updatedAt: string;
+}
+
+export interface AuditLog {
+  id: string;
+  actorId: string;
+  actorRole: string;
+  action: string;
+  targetType?: string;
+  targetId?: string;
+  metadata: Record<string, unknown>;
+  createdAt: string;
+}
+
 export interface SessionUser {
   id: string;
   role: Role;
@@ -39,6 +66,12 @@ export interface Advisor {
   featured: boolean;
   status: AdvisorStatus;
   preferredTheme?: AdvisorTheme;
+  /** Default microsite language for first-time visitors. */
+  defaultLocale?: ContentLocale;
+  /** Whether visitors may switch language on the microsite. */
+  allowLanguageToggle?: boolean;
+  /** Whether visitors may switch theme on the microsite. */
+  allowThemeToggle?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -139,4 +172,6 @@ export interface DatabaseShape {
   promotions: Promotion[];
   enquiries: Enquiry[];
   settings: PlatformSettings;
+  siteContent: SiteContent[];
+  auditLogs: AuditLog[];
 }

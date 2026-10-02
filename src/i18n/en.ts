@@ -75,6 +75,7 @@ const en: Dictionary = {
     rights: "All rights reserved.",
     disclaimer:
       "MOVONHUB is not the official MOVON website; it is operated for authorised Movon Sales Advisors' promotional use. Product names, images and trademarks belong to their owners.",
+    disclaimerLink: "Read full disclaimer",
   },
   home: {
     hero: {
@@ -170,6 +171,27 @@ const en: Dictionary = {
     themeLight: "Light",
     themeDark: "Dark",
     themeToggle: "Toggle theme",
+    seoTitle: "{name} | Movon Sales Advisor",
+    disclaimer:
+      "This page is operated by {name} as an individual Movon Sales Advisor. It is a personal sales and enquiry page and is not the official Movon corporate website. Product information, availability, pricing and promotional terms should be confirmed with the relevant authorised party before purchase.",
+    disclaimerLink: "Read full disclaimer",
+  },
+  legal: {
+    mainDisclaimer:
+      "MOVONHUB is an independently operated platform for sales advisory and related digital tools. It is not the official corporate website of Movon or its brand owner unless expressly stated otherwise. All trademarks, product names and brand assets remain the property of their respective owners. References to Movon products are provided for identification and sales enquiry purposes.",
+    entityName: "[Business or entity name to be confirmed]",
+    registration: "[Registration number to be confirmed]",
+    address: "[Registered address to be confirmed]",
+    contact: "[Privacy or legal contact to be confirmed]",
+  },
+  disclaimer: {
+    eyebrow: "Legal",
+    title: "Disclaimer",
+    reviewNotice:
+      "This wording is a starting point and must be reviewed by Malaysian legal counsel before it is relied upon. It does not create or imply any agency, partnership or endorsement.",
+    p1: "MOVONHUB is an independently operated platform for sales advisory and related digital tools. It is not the official corporate website of Movon or its brand owner unless expressly stated otherwise.",
+    p2: "All trademarks, product names and brand assets remain the property of their respective owners. References to Movon products are provided for identification and sales enquiry purposes.",
+    p3: "Individual Sales Advisors operate their own personal pages. Product information, availability, pricing and promotional terms should be confirmed with the relevant authorised party before purchase.",
   },
   hub: {
     title: "SA Workspace",
@@ -474,6 +496,8 @@ const en: Dictionary = {
     p2: "Customer enquiries are recorded for attribution and advisor follow-up. Enquiry data is not published publicly and is accessible only to the relevant advisor and authorised administrators.",
     p3: "Passwords are stored using salted scrypt hashing. Access to advisor and admin areas is controlled by signed, HTTP-only session cookies and server-side authorisation checks.",
     p4: "The public website links to external services such as WhatsApp and the official Movon website, which have their own privacy practices. This policy will be expanded before public launch.",
+    reviewNotice:
+      "This policy is a draft and requires review by Malaysian legal counsel before it is relied upon. Business name, registration number, registered address and a privacy contact must be completed before launch.",
   },
   terms: {
     eyebrow: "Legal",
@@ -482,6 +506,8 @@ const en: Dictionary = {
     p2: "Product names, images and trademarks belong to their respective owners. Product information is sourced from official Movon channels; where a value is unverified it is not presented as fact.",
     p3: "Advisors are responsible for the accuracy of the personal information they publish and for complying with Movon's advisor guidelines. MovonHub may suspend profiles that breach these terms.",
     p4: "These terms will be reviewed and finalised before public launch.",
+    reviewNotice:
+      "These terms are a draft and require review by Malaysian legal counsel before they are relied upon. Business name, registration number and registered address must be completed before launch.",
   },
   register: {
     title: "Create your Sales Advisor page",
@@ -498,7 +524,7 @@ const en: Dictionary = {
     available: "Username is available.",
     taken: "This username is already taken.",
     password: "Password",
-    passwordPlaceholder: "At least 6 characters",
+    passwordPlaceholder: "At least 8 characters",
     passwordHint: "Used to log in to your dashboard later.",
     location: "Location / service area",
     locationPlaceholder: "Kuala Lumpur & Selangor",
@@ -573,6 +599,16 @@ const en: Dictionary = {
     products: "Products",
     promotions: "Promotions",
     settings: "Settings",
+    navContent: "Website Content",
+    navSecurity: "Security & Settings",
+    personalPageSettings: "Personal Page Settings",
+    personalPageSettingsBody:
+      "Choose the default language and theme for this advisor's page, and decide whether visitors may change them.",
+    fieldDefaultLanguage: "Default language",
+    fieldAllowLanguageToggle: "Allow visitors to switch language",
+    fieldAllowThemeToggle: "Allow visitors to switch theme",
+    enabled: "Enabled",
+    disabled: "Disabled",
     starAdvisors: "Sales Advisors",
     productCatalogue: "Product catalogue",
     activeAdvisors: "Active advisors",
@@ -677,6 +713,27 @@ const en: Dictionary = {
       empty: "No SAs registered yet.",
       resultsCount: "{count} SAs",
     },
+    content: {
+      title: "Website Content",
+      intro: "Edit the text shown on the public website. Changes stay as drafts until you publish them.",
+      chooseScope: "What are you editing?",
+      scopeSite: "Main website",
+      scopeSaGlobal: "SA pages (all advisors)",
+      scopeSa: "One advisor only",
+      chooseAdvisor: "Choose a sales advisor",
+      loading: "Loading content…",
+      saveDraft: "Save draft",
+      publish: "Publish",
+      revert: "Revert to default",
+      preview: "Live preview",
+      unsaved: "You have unsaved changes. Publish or save a draft before leaving.",
+      savedDraft: "Draft saved. It is not public yet.",
+      published: "Published. Your changes are now live.",
+      reverted: "Overrides removed. The default wording is shown again.",
+      emptyHint: "Leave a field empty to use the default wording.",
+      seoHint: "These fields affect how the page appears in search results.",
+      noOverride: "No custom wording yet. Default text is shown in the preview.",
+    },
   },
   auth: {
     notAuthenticated: "Not authenticated.",
@@ -687,6 +744,8 @@ const en: Dictionary = {
     adminNotConfigured: "Admin login is not configured on this server.",
     inactive: "This advisor profile is not active. Please contact an administrator.",
     enterCredentials: "Enter your username and password.",
+    tooManyAttempts: "Too many attempts. Please wait a few minutes and try again.",
+    registrationDisabled: "Self-registration is closed. Please contact MOVONHUB to request a Sales Advisor page.",
   },
 };
 

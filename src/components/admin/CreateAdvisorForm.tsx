@@ -141,7 +141,14 @@ export function CreateAdvisorForm() {
           <p className="mt-1 text-xs text-muted">{t("admin.sa.createdNote")}</p>
           {err.password && <p className="field-error">{err.password}</p>}
         </div>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-3 gap-3">
+          <div>
+            <label className="field-label">{t("admin.fieldDefaultLanguage")}</label>
+            <select name="defaultLocale" defaultValue="en" className="field-input">
+              <option value="en">English</option>
+              <option value="ms">Bahasa Melayu</option>
+            </select>
+          </div>
           <div>
             <label className="field-label">{t("admin.sa.fieldTheme")}</label>
             <select name="preferredTheme" defaultValue="light" className="field-input">

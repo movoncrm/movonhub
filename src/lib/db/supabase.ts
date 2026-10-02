@@ -1,12 +1,16 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type {
   Advisor,
+  AuditLog,
+  ContentLocale,
+  ContentScope,
   Enquiry,
   PlatformSettings,
   Product,
   ProductCategory,
   ProductStatus,
   Promotion,
+  SiteContent,
 } from "@/lib/types";
 import { newId, nowISO } from "@/lib/id";
 import type { DataStore } from "./store";
@@ -58,6 +62,9 @@ function advisorFromRow(r: Row): Advisor {
     featured: Boolean(r.featured),
     status: (r.status as Advisor["status"]) ?? (r.active ? "published" : "draft"),
     preferredTheme: (r.preferred_theme as Advisor["preferredTheme"]) ?? "light",
+    defaultLocale: (r.default_locale as Advisor["defaultLocale"]) ?? "en",
+    allowLanguageToggle: r.allow_language_toggle === undefined ? true : Boolean(r.allow_language_toggle),
+    allowThemeToggle: r.allow_theme_toggle === undefined ? true : Boolean(r.allow_theme_toggle),
     createdAt: String(r.created_at),
     updatedAt: String(r.updated_at),
   };
@@ -83,6 +90,9 @@ function advisorToRow(a: Partial<Advisor>): Row {
   if (a.featured !== undefined) row.featured = a.featured;
   if (a.status !== undefined) row.status = a.status;
   if (a.preferredTheme !== undefined) row.preferred_theme = a.preferredTheme;
+  if (a.defaultLocale !== undefined) row.default_locale = a.defaultLocale;
+  if (a.allowLanguageToggle !== undefined) row.allow_language_toggle = a.allowLanguageToggle;
+  if (a.allowThemeToggle !== undefined) row.allow_theme_toggle = a.allowThemeToggle;
   return row;
 }
 
@@ -160,6 +170,33 @@ function enquiryFromRow(r: Row): Enquiry {
     channel: String(r.channel ?? "whatsapp"),
     message: (r.message as string) || undefined,
     status: (r.status as Enquiry["status"]) ?? "new",
+    createdAt: String(r.created_at),
+  };
+}
+
+function siteContentFromRow(r: Row): SiteContent {
+  return {
+    id: String(r.id),
+    scope: r.scope as ContentScope,
+    advisorId: (r.advisor_id as string) || undefined,
+    contentKey: String(r.content_key),
+    locale: r.locale as ContentLocale,
+    value: String(r.value ?? ""),
+    status: (r.status as SiteContent["status"]) ?? "draft",
+    updatedBy: (r.updated_by as string) || undefined,
+    updatedAt: String(r.updated_at),
+  };
+}
+
+function auditFromRow(r: Row): AuditLog {
+  return {
+    id: String(r.id),
+    actorId: String(r.actor_id),
+    actorRole: String(r.actor_role),
+    action: String(r.action),
+    targetType: (r.target_type as string) || undefined,
+    targetId: (r.target_id as string) || undefined,
+    metadata: (r.metadata as Record<string, unknown>) ?? {},
     createdAt: String(r.created_at),
   };
 }
@@ -372,5 +409,106 @@ export class SupabaseStore implements DataStore {
       .upsert({ id: "platform", featured_advisor_slugs: next.featuredAdvisorSlugs, tools: next.tools });
     if (error) throw error;
     return next;
+  }
+
+  async listSiteContent(opts?: { scope?: ContentScope; advisorId?: string | null }): Promise<SiteContent[]> {
+    let q = sb().from("site_content").select("*");
+    if (opts?.scope) q = q.eq("scope", opts.scope);
+    if (opts && "advisorId" in opts && opts.advisorId !== undefined) {
+      q = opts.advisorId === null ? q.is("advisor_id", null) : q.eq("advisor_id", opts.advisorId);
+    }
+    const { data, error } = await q;
+    if (error) throw error;
+    return (data ?? []).map(siteContentFromRow);
+  }
+
+  async upsertSiteContent(input: Omit<SiteContent, "id" | "updatedAt">): Promise<SiteContent> {
+    const advisorId = input.advisorId ?? null;
+    let existing = sb()
+      .from("site_content")
+      .select("id")
+      .eq("scope", input.scope)
+      .eq("content_key", input.contentKey)
+      .eq("locale", input.locale);
+    existing = advisorId === null ? existing.is("advisor_id", null) : existing.eq("advisor_id", advisorId);
+    const { data: found, error: findError } = await existing.maybeSingle();
+    if (findError) throw findError;
+
+    const row: Row = {
+      scope: input.scope,
+      advisor_id: advisorId,
+      content_key: input.contentKey,
+      locale: input.locale,
+      value: input.value,
+      status: input.status,
+      updated_by: input.updatedBy ?? null,
+      updated_at: nowISO(),
+    };
+
+    if (found?.id) {
+      const { data, error } = await sb()
+        .from("site_content")
+        .update(row)
+        .eq("id", found.id)
+        .select("*")
+        .single();
+      if (error) throw error;
+      return siteContentFromRow(data);
+    }
+    const { data, error } = await sb().from("site_content").insert(row).select("*").single();
+    if (error) throw error;
+    return siteContentFromRow(data);
+  }
+
+  async deleteSiteContent(opts: {
+    scope: ContentScope;
+    advisorId?: string | null;
+    contentKey?: string;
+    locale?: ContentLocale;
+  }): Promise<void> {
+    const advisorId = opts.advisorId ?? null;
+    let q = sb().from("site_content").delete().eq("scope", opts.scope);
+    q = advisorId === null ? q.is("advisor_id", null) : q.eq("advisor_id", advisorId);
+    if (opts.contentKey) q = q.eq("content_key", opts.contentKey);
+    if (opts.locale) q = q.eq("locale", opts.locale);
+    const { error } = await q;
+    if (error) throw error;
+  }
+
+  async createAuditLog(input: Omit<AuditLog, "id" | "createdAt">): Promise<AuditLog> {
+    const { data, error } = await sb()
+      .from("audit_logs")
+      .insert({
+        actor_id: input.actorId,
+        actor_role: input.actorRole,
+        action: input.action,
+        target_type: input.targetType ?? null,
+        target_id: input.targetId ?? null,
+        metadata: input.metadata ?? {},
+      })
+      .select("*")
+      .single();
+    if (error) throw error;
+    return auditFromRow(data);
+  }
+
+  async listAuditLogs(limit = 100): Promise<AuditLog[]> {
+    const { data, error } = await sb()
+      .from("audit_logs")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(limit);
+    if (error) throw error;
+    return (data ?? []).map(auditFromRow);
+  }
+
+  async consumeRateLimit(key: string, limit: number, windowSeconds: number): Promise<boolean> {
+    const { data, error } = await sb().rpc("consume_rate_limit", {
+      p_key: key,
+      p_limit: limit,
+      p_window_seconds: windowSeconds,
+    });
+    if (error) throw error;
+    return Boolean(data);
   }
 }

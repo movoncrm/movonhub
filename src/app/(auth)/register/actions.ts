@@ -1,16 +1,29 @@
 "use server";
 
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import type { ActionState } from "@/lib/actions";
 import { getStore } from "@/lib/db";
 import { setSessionCookie } from "@/lib/auth/session";
+import { registrationEnabled } from "@/lib/auth/registration";
 import { advisorRegisterSchema } from "@/lib/validation";
 import { saveAdvisorPhoto } from "@/lib/storage";
 import { hashPassword } from "@/lib/auth/password";
 import { getI18n } from "@/i18n/server";
+import { consumeLimit, clientIp } from "@/lib/rateLimit";
+import { logAudit } from "@/lib/audit";
 
 export async function registerAdvisor(_prev: ActionState, formData: FormData): Promise<ActionState> {
   const { t } = await getI18n();
+
+  if (!registrationEnabled()) {
+    return { error: t("auth.registrationDisabled") };
+  }
+
+  const ip = clientIp(await headers());
+  if (!(await consumeLimit(`register:${ip}`, 5, 3600))) {
+    return { error: t("auth.tooManyAttempts") };
+  }
 
   const raw = {
     name: String(formData.get("name") || ""),
@@ -65,6 +78,13 @@ export async function registerAdvisor(_prev: ActionState, formData: FormData): P
     featured: false,
     status: "published",
     preferredTheme: "light",
+    defaultLocale: "en",
+    allowLanguageToggle: true,
+    allowThemeToggle: true,
+  });
+
+  await logAudit({ id: advisor.id, role: "advisor" }, "advisor.self_registered", { type: "advisor", id: advisor.id }, {
+    slug: advisor.slug,
   });
 
   await setSessionCookie({

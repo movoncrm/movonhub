@@ -5,6 +5,8 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["src/**/*.test.ts"],
+    // Tests share the local JSON adapter; run files serially to avoid races.
+    fileParallelism: false,
   },
   resolve: {
     alias: {

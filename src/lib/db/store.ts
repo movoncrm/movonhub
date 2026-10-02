@@ -1,11 +1,15 @@
 import type {
   Advisor,
+  AuditLog,
+  ContentLocale,
+  ContentScope,
   Enquiry,
   PlatformSettings,
   Product,
   ProductCategory,
   ProductStatus,
   Promotion,
+  SiteContent,
 } from "@/lib/types";
 
 export interface DataStore {
@@ -35,4 +39,25 @@ export interface DataStore {
 
   getSettings(): Promise<PlatformSettings>;
   updateSettings(patch: Partial<PlatformSettings>): Promise<PlatformSettings>;
+
+  /** Editable website copy for the main site and SA microsites. */
+  listSiteContent(opts?: { scope?: ContentScope; advisorId?: string | null }): Promise<SiteContent[]>;
+  upsertSiteContent(input: Omit<SiteContent, "id" | "updatedAt">): Promise<SiteContent>;
+  deleteSiteContent(opts: {
+    scope: ContentScope;
+    advisorId?: string | null;
+    contentKey?: string;
+    locale?: ContentLocale;
+  }): Promise<void>;
+
+  /** Append-only audit trail for sensitive operations. */
+  createAuditLog(input: Omit<AuditLog, "id" | "createdAt">): Promise<AuditLog>;
+  listAuditLogs(limit?: number): Promise<AuditLog[]>;
+
+  /**
+   * Durable, cross-instance rate limiter. Returns false when the limit is
+   * exceeded. The Supabase adapter uses an atomic SQL function; the local
+   * adapter uses an in-memory fixed window (development only).
+   */
+  consumeRateLimit(key: string, limit: number, windowSeconds: number): Promise<boolean>;
 }

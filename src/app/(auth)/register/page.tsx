@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { RegisterForm } from "@/components/register/RegisterForm";
 import { getSession } from "@/lib/auth/session";
+import { registrationEnabled } from "@/lib/auth/registration";
 import { getI18n } from "@/i18n/server";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -18,6 +19,20 @@ export default async function RegisterPage() {
   const [session, { t }] = await Promise.all([getSession(), getI18n()]);
   if (session?.role === "advisor") redirect("/dashboard");
   if (session?.role === "admin") redirect("/admin");
+
+  if (!registrationEnabled()) {
+    return (
+      <div className="w-full max-w-xl text-center">
+        <h1 className="text-3xl">{t("register.title")}</h1>
+        <p className="mt-3 text-sm text-muted">{t("auth.registrationDisabled")}</p>
+        <p className="mt-6 text-sm text-muted">
+          <Link href="/login" className="font-semibold text-primary">
+            {t("register.loginLink")}
+          </Link>
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-2xl">

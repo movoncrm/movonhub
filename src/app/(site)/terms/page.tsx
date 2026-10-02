@@ -13,6 +13,9 @@ export default async function TermsPage() {
     <div className="container-page py-14">
       <SectionHeading eyebrow={t("terms.eyebrow")} title={t("terms.title")} />
       <div className="mt-8 max-w-3xl space-y-4 text-sm leading-relaxed text-muted">
+        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-amber-900">
+          {t("terms.reviewNotice")}
+        </div>
         <p>{t("terms.p1")}</p>
         <p>{t("terms.p2")}</p>
         <p>{t("terms.p3")}</p>

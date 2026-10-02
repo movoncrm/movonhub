@@ -87,6 +87,9 @@ export function buildSeed(): DatabaseShape {
         featured: true,
         status: "published",
         preferredTheme: "light",
+        defaultLocale: "en",
+        allowLanguageToggle: true,
+        allowThemeToggle: true,
         createdAt: now,
         updatedAt: now,
       },
@@ -497,5 +500,7 @@ export function buildSeed(): DatabaseShape {
     ],
 
     enquiries: [],
+    siteContent: [],
+    auditLogs: [],
   };
 }

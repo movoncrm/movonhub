@@ -28,6 +28,8 @@ const RESERVED = new Set([
   "cdn",
   "status",
   "sso",
+  "disclaimer",
+  "legal",
 ]);
 
 export function middleware(request: NextRequest) {

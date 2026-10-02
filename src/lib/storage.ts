@@ -17,10 +17,16 @@ export interface UploadResult {
   error?: string;
 }
 
+function supabaseUrl(): string | undefined {
+  // Prefer the runtime-only SUPABASE_URL (not inlined at build time). Fall back
+  // to NEXT_PUBLIC_SUPABASE_URL for local development.
+  return process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+}
+
 function shouldUseSupabase(): boolean {
   return (
     (process.env.DATA_ADAPTER || "local").toLowerCase() === "supabase" &&
-    Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY)
+    Boolean(supabaseUrl() && process.env.SUPABASE_SERVICE_ROLE_KEY)
   );
 }
 
@@ -40,7 +46,7 @@ export async function saveAdvisorPhoto(file: File, slug: string): Promise<Upload
   const filename = `${slug}-${newId().slice(0, 8)}.${ext}`;
 
   if (shouldUseSupabase()) {
-    const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
+    const supabase = createClient(supabaseUrl()!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
       auth: { persistSession: false },
     });
     const { error } = await supabase.storage

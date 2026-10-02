@@ -53,10 +53,11 @@ export default async function AdminPage() {
   const nav = [
     { href: "#overview", label: t("admin.sa.navOverview") },
     { href: "#advisors", label: t("admin.sa.navAdvisors") },
+    { href: "/admin/content", label: t("admin.navContent") },
     { href: "#products", label: t("admin.sa.navProducts") },
     { href: "#promotions", label: t("admin.sa.navPromotions") },
     { href: "#enquiries", label: t("admin.sa.navEnquiries") },
-    { href: "#settings", label: t("admin.sa.navSettings") },
+    { href: "#settings", label: t("admin.sa.navSecurity") },
   ];
 
   return (
