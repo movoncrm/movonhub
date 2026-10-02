@@ -35,7 +35,10 @@ export async function GET() {
   try {
     advisorCount = (await getStore().listAdvisors()).length;
   } catch (error) {
-    dbError = error instanceof Error ? error.message : String(error);
+    const e = error as { message?: string; code?: string; details?: string; hint?: string; status?: number };
+    dbError =
+      [e?.message, e?.code, e?.details, e?.hint].filter(Boolean).join(" | ") ||
+      (error instanceof Error ? error.message : JSON.stringify(error));
   }
 
   return NextResponse.json({ ok: !dbError, env, advisorCount, dbError });
