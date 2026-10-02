@@ -72,8 +72,9 @@ Secrets are server-side only and never committed. `NEXT_PUBLIC_*` are public.
 | `SESSION_SECRET` | ✅ | ✅ **secret** | secret | — |
 | `ADMIN_PASSWORD` | ✅ | ✅ **secret** | secret | — |
 | `DATA_ADAPTER` | `local` | `supabase` | — | — |
-| `NEXT_PUBLIC_SUPABASE_URL` | ✅ | ✅ (var) | — | ✅ |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ | ✅ (var) | — | ✅ |
+| `SUPABASE_URL` | ✅ | ✅ **secret** | — | ✅ |
+| `NEXT_PUBLIC_SUPABASE_URL` | ✅ | optional (build) | — | ✅ |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | optional | optional | — | ✅ |
 | `SUPABASE_SERVICE_ROLE_KEY` | ✅ | ✅ **secret** | secret | ✅ |
 | `AI_PROVIDER` / `AI_API_KEY` / `AI_MODEL` | optional | optional **secret** | optional | — |
 
@@ -213,8 +214,14 @@ Nothing has been deployed, no DNS/SSL changed, and no secrets were committed.
 
 The first controlled launch exposes **two pages only**:
 
-- `https://movonhub.com.my` — MOVONHUB Coming Soon (dark-only)
-- `https://nik.movonhub.com.my` — Nik's SA microsite
+- `https://movonhub.com.my` — MOVONHUB Coming Soon (dark-only) — **LIVE**
+- `https://nik.movonhub.com.my` — Nik's SA microsite — **LIVE**
+
+Worker: `movonhub` (OpenNext) on branch `launch`. Supabase migrations `0001`, `0002` and
+`supabase/seed.sql` applied; advisor `nik` created via `/admin`.
+**Important:** the server reads `SUPABASE_URL` at runtime (not `NEXT_PUBLIC_SUPABASE_URL`, which
+Next inlines at build time). Non-secret runtime vars live in `wrangler.jsonc` `vars` so Workers
+Builds deploys retain them; secrets are set with `wrangler secret put`.
 
 Everything below is **EXTERNAL** (requires account access) and has **not** been performed locally.
 

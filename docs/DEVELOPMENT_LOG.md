@@ -1,5 +1,39 @@
 # MOVONHUB — Development Log
 
+## 2026-10-02 — First public deployment (GitHub → Cloudflare Workers → Supabase)
+
+### Live
+- `https://movonhub.com.my` — MOVONHUB Coming Soon (dark-only).
+- `https://nik.movonhub.com.my` — Nik's SA microsite (WhatsApp 601113002181, 6 featured
+  products, dark/light toggle). `https://www.movonhub.com.my` also attached.
+- Worker: `movonhub` (OpenNext). Source: GitHub `movoncrm/movonhub`, branch `launch`.
+- Data: Supabase project (migrations 0001 + 0002 + `supabase/seed.sql`); advisor `nik` created
+  through `/admin`.
+
+### Deployment issues found & fixed
+1. **Wrong build branch** — the Worker initially built `main` (old stub). Set production branch to
+   `launch`.
+2. **`npm ci` lockfile mismatch** — `package-lock.json` was out of sync for npm 10
+   (`@emnapi/*` optional deps missing). Regenerated with `npx npm@10 install --package-lock-only`.
+3. **Dashboard vars wiped by Workers Builds deploys** — moved non-secret runtime config into
+   `wrangler.jsonc` `vars` (`DATA_ADAPTER`, `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_ROOT_DOMAIN`,
+   `NEXT_PUBLIC_UNOPTIMIZED_IMAGES`) so every deploy retains them.
+4. **`NEXT_PUBLIC_*` is inlined at build time** — the Server read a malformed build-time Supabase
+   URL. Switched the server (`src/lib/db/supabase.ts`) to prefer the runtime `SUPABASE_URL`.
+5. **Secret paste corruption** — terminal paste produced 1-char control-character secrets. Re-set
+   via file/pipe (`Get-Content | wrangler secret put`). Verified service key length 219.
+
+### Cloudflare configuration
+- Runtime secrets (via `wrangler secret put`): `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`,
+   `SESSION_SECRET`, `ADMIN_PASSWORD`. (`NEXT_PUBLIC_SUPABASE_ANON_KEY` is not required at runtime.)
+- Custom Domains attached to the Worker: `movonhub.com.my`, `www.movonhub.com.my`,
+   `nik.movonhub.com.my` (DNS records auto-created; SSL via Cloudflare).
+- Wildcard `*.movonhub.com.my` remains a future step (Worker Route + proxied wildcard DNS).
+
+### Cleanup
+- Removed the temporary `/api/health` diagnostic endpoint used during setup.
+- Added `supabase/seed.sql` (idempotent reference data; no credentials).
+
 ## 2026-10-02 — First public launch preparation (Coming Soon + Nik SA page)
 
 ### Scope
