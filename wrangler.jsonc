@@ -1,0 +1,23 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "movonhub",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2025-03-25",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  // Custom domains are configured in the Cloudflare dashboard / via `wrangler`.
+  // The wildcard record (*.movonhub.com.my) requires a wildcard DNS record and a
+  // wildcard/san certificate before it can be attached. See
+  // docs/DEPLOYMENT_CLOUDFLARE.md. Uncomment once the zone is ready.
+  "routes": [
+    // { "pattern": "movonhub.com.my", "custom_domain": true },
+    // { "pattern": "www.movonhub.com.my", "custom_domain": true },
+    // { "pattern": "*.movonhub.com.my", "custom_domain": true }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}

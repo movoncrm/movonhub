@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 124" width="560" height="124" role="img" aria-label="MOVONHUB">
+  <defs>
+    <linearGradient id="lg-m" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2E8CFF"/>
+      <stop offset="1" stop-color="#0B4FD8"/>
+    </linearGradient>
+    <linearGradient id="lg-h" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6B7B90"/>
+      <stop offset="1" stop-color="#2B3947"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-width="22" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 24 98 L 24 34 L 64 74 L 104 34 L 104 98" stroke="url(#lg-m)"/>
+    <path d="M 140 34 L 140 98 M 140 66 L 200 66 M 200 34 L 200 98" stroke="url(#lg-h)"/>
+  </g>
+  <text x="248" y="82" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="46" font-weight="800" letter-spacing="-1.5" fill="#2B3947">MOVON<tspan fill="#1E7BFF">HUB</tspan></text>
+</svg>

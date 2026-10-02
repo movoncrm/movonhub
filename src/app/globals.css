@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Design tokens — derived from the MOVONHUB "MH" logo reference. */
+  --color-primary: #1e7bff;
+  --color-primary-dark: #0b4fd8;
+  --color-primary-deep: #0a3fa8;
+  --color-primary-soft: rgba(30, 123, 255, 0.1);
+
+  --color-secondary: #5b6b7f;
+  --color-secondary-dark: #2b3947;
+
+  --color-accent: #ffb600;
+
+  --color-background: #f5f7fa;
+  --color-surface: #ffffff;
+  --color-card: #ffffff;
+  --color-border: #e4e8ee;
+
+  --color-text: #1f2a37;
+  --color-muted: #6b7280;
+
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --color-destructive: #dc2626;
+  --color-focus: #1e7bff;
+
+  /* Per-advisor brand accent (overridable inline on advisor pages). */
+  --brand-accent: #1e7bff;
+  --brand-accent-dark: #0b4fd8;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-surface text-ink antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-bold tracking-tight text-ink;
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background: rgba(30, 123, 255, 0.18);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-container px-5 sm:px-6 lg:px-8;
+  }
+
+  .eyebrow {
+    @apply text-xs font-bold uppercase tracking-[0.18em] text-primary;
+  }
+
+  .section {
+    @apply py-16 sm:py-20 lg:py-24;
+  }
+
+  .card-surface {
+    @apply rounded-2xl border border-borderline bg-card shadow-card;
+  }
+
+  .field-label {
+    @apply mb-1.5 block text-sm font-semibold text-ink;
+  }
+
+  .field-input {
+    @apply w-full rounded-xl border border-borderline bg-surface px-3.5 py-2.5 text-sm text-ink
+      outline-none transition placeholder:text-muted/70
+      focus:border-primary focus:ring-4 focus:ring-primary/10
+      disabled:cursor-not-allowed disabled:bg-background;
+  }
+
+  .field-error {
+    @apply mt-1 text-xs font-medium text-destructive;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
