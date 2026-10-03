@@ -1,6 +1,7 @@
 import type { DatabaseShape, Product } from "@/lib/types";
 import { resolveProductImageUrl } from "@/lib/assets/url";
 import { hashPassword } from "@/lib/auth/password";
+import { PHASE5_CATEGORIES, PHASE5_PRODUCTS } from "@/data/phase5-products";
 
 const MOVON = "https://movon.com.my";
 const IMG = `${MOVON}/wp-content/uploads`;
@@ -128,6 +129,7 @@ export function buildSeed(): DatabaseShape {
         icon: "sparkles",
         sortOrder: 3,
       },
+      ...PHASE5_CATEGORIES,
     ],
 
     products: ([
@@ -143,10 +145,12 @@ export function buildSeed(): DatabaseShape {
         fullDescription:
           "The MOVON HyperMate Station (M Series) is an auto-empties vacuum cleaner designed for effortless everyday cleaning, docking to empty and charge automatically.",
         features: ["Auto-empty docking station", "Cordless cleaning", "Smart app connectivity"],
-        specifications: {},
+        specifications: { "Q4 2026 promotion (source)": "RM1,599 outright (NPC RM2,399, save RM800); 1yr product warranty" },
         rentalPlans: [],
+        outrightPrice: 2399,
         status: "active",
         sourceUrl: `${MOVON}/product/hypermate`,
+        sourceRef: "Q4 2026 MOVON PROMOTION (outright)",
         sortOrder: 1,
         updatedAt: now,
       },
@@ -162,10 +166,12 @@ export function buildSeed(): DatabaseShape {
         fullDescription:
           "The MOVON HydroMate Ultra Station (M Series) is a wet & dry vacuum built for tough messes, paired with a self-maintaining station.",
         features: ["Wet & dry pickup", "Self-cleaning station", "Smart app connectivity"],
-        specifications: {},
+        specifications: { "Q4 2026 promotion (source)": "RM1,799 outright (NPC RM2,999, save RM1,200); 1yr product warranty" },
         rentalPlans: [],
+        outrightPrice: 2999,
         status: "active",
         sourceUrl: `${MOVON}/product/hydromate`,
+        sourceRef: "Q4 2026 MOVON PROMOTION (outright)",
         sortOrder: 2,
         updatedAt: now,
       },
@@ -181,10 +187,17 @@ export function buildSeed(): DatabaseShape {
         fullDescription:
           "The MOVON DuoMate+ 10.7 (M Series) is a hyper boost washer dryer combining smart laundry features such as automatic detergent dispensing and dedicated baby-care cycles.",
         features: ["Washer + dryer combo", "Automatic detergent dispensing", "Baby-care cycle", "Smart app connectivity"],
-        specifications: {},
-        rentalPlans: [],
+        specifications: { "Q4 2026 promotion (source)": "Smart Rental Plans A RM119×36 · B RM109×48 · C RM99×60 · D RM89×72; outright from RM3,700" },
+        rentalPlans: [
+          { label: "Smart Plan A", monthlyPrice: 119, tenureMonths: 36 },
+          { label: "Smart Plan B", monthlyPrice: 109, tenureMonths: 48 },
+          { label: "Smart Plan C", monthlyPrice: 99, tenureMonths: 60 },
+          { label: "Smart Plan D", monthlyPrice: 89, tenureMonths: 72 },
+        ],
+        outrightPrice: 3700,
         status: "active",
         sourceUrl: `${MOVON}/product/movon-duomateplus-mseries/`,
+        sourceRef: "Q4 2026 MOVON PROMOTION (rental)",
         sortOrder: 3,
         updatedAt: now,
       },
@@ -200,10 +213,17 @@ export function buildSeed(): DatabaseShape {
         fullDescription:
           "The MOVON WashMate 9KG (M Series) is a fully automatic front-loading washing machine designed for efficient, family-friendly laundry care.",
         features: ["9KG capacity", "Front load", "Fully automatic", "Smart app connectivity"],
-        specifications: {},
-        rentalPlans: [],
+        specifications: { "Q4 2026 promotion (source)": "Smart Rental Plans A RM110×36 · B RM99×48 · C RM89×60 · D RM79×72; outright RM3,000" },
+        rentalPlans: [
+          { label: "Smart Plan A", monthlyPrice: 110, tenureMonths: 36 },
+          { label: "Smart Plan B", monthlyPrice: 99, tenureMonths: 48 },
+          { label: "Smart Plan C", monthlyPrice: 89, tenureMonths: 60 },
+          { label: "Smart Plan D", monthlyPrice: 79, tenureMonths: 72 },
+        ],
+        outrightPrice: 3000,
         status: "active",
         sourceUrl: `${MOVON}/product/movon-space-washmate/`,
+        sourceRef: "Q4 2026 MOVON PROMOTION (rental)",
         sortOrder: 4,
         updatedAt: now,
       },
@@ -219,10 +239,17 @@ export function buildSeed(): DatabaseShape {
         fullDescription:
           "The MOVON DuoMate 10.6 (V Series) is an ultra-slim smart washer and dryer that fits modern living spaces without compromising capacity.",
         features: ["Ultra-slim design", "Washer + dryer combo", "Smart app connectivity"],
-        specifications: {},
-        rentalPlans: [],
+        specifications: { "Q4 2026 promotion (source)": "Smart Rental Plans A RM125×36 · B RM109×48 · C RM99×60 · D RM89×72; outright RM3,500" },
+        rentalPlans: [
+          { label: "Smart Plan A", monthlyPrice: 125, tenureMonths: 36 },
+          { label: "Smart Plan B", monthlyPrice: 109, tenureMonths: 48 },
+          { label: "Smart Plan C", monthlyPrice: 99, tenureMonths: 60 },
+          { label: "Smart Plan D", monthlyPrice: 89, tenureMonths: 72 },
+        ],
+        outrightPrice: 3500,
         status: "active",
         sourceUrl: `${MOVON}/product/movon-space-duo-mate/`,
+        sourceRef: "Q4 2026 MOVON PROMOTION (rental)",
         sortOrder: 5,
         updatedAt: now,
       },
@@ -238,10 +265,15 @@ export function buildSeed(): DatabaseShape {
         fullDescription:
           "The MOVON ChillMate+ 601L (M Series) is a smart space refrigerator offering large-capacity cooling with independent temperature zones for enhanced freshness control.",
         features: ["601L capacity", "Independent temperature zones", "Smart app connectivity"],
-        specifications: {},
-        rentalPlans: [],
+        specifications: { "Q4 2026 promotion (source)": "Smart Rental Plans A RM109×60 · B RM99×72; outright RM6,300" },
+        rentalPlans: [
+          { label: "Smart Plan A", monthlyPrice: 109, tenureMonths: 60 },
+          { label: "Smart Plan B", monthlyPrice: 99, tenureMonths: 72 },
+        ],
+        outrightPrice: 6300,
         status: "active",
         sourceUrl: `${MOVON}/product/movon-chillmateplus-mseries/`,
+        sourceRef: "Q4 2026 MOVON PROMOTION (rental)",
         sortOrder: 6,
         updatedAt: now,
       },
@@ -257,10 +289,16 @@ export function buildSeed(): DatabaseShape {
         fullDescription:
           "The MOVON CoolMate 418L (M Series) is a multi-door refrigerator with flexible storage and smart cooling.",
         features: ["418L capacity", "Multi-door layout", "Smart app connectivity"],
-        specifications: {},
-        rentalPlans: [],
+        specifications: { "Q4 2026 promotion (source)": "Smart Rental Plans A RM110 (Mth1–36) + RM90 (Mth37–60) · B RM99×60 · C RM89×72; outright RM4,300" },
+        rentalPlans: [
+          { label: "Smart Plan A", monthlyPrice: 110, tenureMonths: 60, note: "RM90/month from month 37" },
+          { label: "Smart Plan B", monthlyPrice: 99, tenureMonths: 60 },
+          { label: "Smart Plan C", monthlyPrice: 89, tenureMonths: 72 },
+        ],
+        outrightPrice: 4300,
         status: "active",
         sourceUrl: `${MOVON}/product/movon-space-coolmate/`,
+        sourceRef: "Q4 2026 MOVON PROMOTION (rental)",
         sortOrder: 7,
         updatedAt: now,
       },
@@ -294,10 +332,12 @@ export function buildSeed(): DatabaseShape {
         fullDescription:
           "The MOVON LockMate is a smart digital door lock that improves home security with convenient keyless entry and app control.",
         features: ["Keyless entry", "App control", "Home security"],
-        specifications: {},
-        rentalPlans: [],
+        specifications: { "Q4 2026 promotion (source)": "Outright RM2,400 → RM1,600; bare unit RM1,200; 2yr warranty, installation included, FOC 3 cards" },
+        rentalPlans: [{ label: "Rental", monthlyPrice: 69, tenureMonths: 36 }],
+        outrightPrice: 2400,
         status: "active",
         sourceUrl: `${MOVON}/product/movon-space-lockmate/`,
+        sourceRef: "Q4 2026 MOVON PROMOTION (outright/rental)",
         sortOrder: 9,
         updatedAt: now,
       },
@@ -450,6 +490,7 @@ export function buildSeed(): DatabaseShape {
         sortOrder: 4,
         updatedAt: now,
       },
+      ...PHASE5_PRODUCTS,
     ] satisfies Product[]).map(managedImage),
 
     // Seeded as inactive pending verification of mechanics/dates.
@@ -508,6 +549,7 @@ export function buildSeed(): DatabaseShape {
     ],
 
     enquiries: [],
+    leads: [],
     siteContent: [],
     auditLogs: [],
   };

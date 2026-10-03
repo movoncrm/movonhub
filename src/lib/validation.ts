@@ -143,6 +143,38 @@ export const enquirySchema = z.object({
   message: z.string().trim().max(1000).optional().or(z.literal("")),
 });
 
+export const leadStatusSchema = z.enum([
+  "NEW",
+  "CONTACTED",
+  "NO_REPLY",
+  "INTERESTED",
+  "FORM",
+  "QUALIFIED",
+  "NET",
+  "REJECTED",
+  "CANCELLED",
+]);
+export const leadCategorySchema = z.enum(["space", "baby", "choice", "cuckoo", "vacuum", "other"]);
+export const leadPlanTypeSchema = z.enum(["outright", "rental"]);
+export const leadPromotionSchema = z.enum(["none", "rm12", "samsung", "joy_pack"]);
+
+export const leadSchema = z.object({
+  customerName: z.string().trim().max(80).optional().or(z.literal("")),
+  contactRaw: z.string().trim().max(30).optional().or(z.literal("")),
+  status: leadStatusSchema.default("NEW"),
+  planType: leadPlanTypeSchema.default("outright"),
+  category: leadCategorySchema.default("space"),
+  isDuo: z.boolean().default(false),
+  promotion: leadPromotionSchema.default("none"),
+  proxyOwner: z.string().trim().max(80).optional().or(z.literal("")),
+  location: z.string().trim().max(80).optional().or(z.literal("")),
+  productInterest: z.string().trim().max(160).optional().or(z.literal("")),
+  productId: z.string().trim().max(64).optional().or(z.literal("")),
+  remarks: z.string().trim().max(1000).optional().or(z.literal("")),
+  lastFollowUpAt: z.string().trim().max(40).optional().or(z.literal("")),
+  netDate: z.string().trim().max(40).optional().or(z.literal("")),
+});
+
 export const promotionSchema = z.object({
   title: z.string().trim().min(2).max(120),
   description: z.string().trim().min(2).max(600),
@@ -228,4 +260,5 @@ export function formBoolean(value: FormDataEntryValue | null): boolean {
 export type AdvisorRegisterInput = z.infer<typeof advisorRegisterSchema>;
 export type AdvisorUpdateInput = z.infer<typeof advisorUpdateSchema>;
 export type EnquiryInput = z.infer<typeof enquirySchema>;
+export type LeadInput = z.infer<typeof leadSchema>;
 export type AdvisorSettingsInput = z.infer<typeof advisorSettingsSchema>;

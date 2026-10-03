@@ -4,6 +4,7 @@ import type {
   ContentLocale,
   ContentScope,
   Enquiry,
+  Lead,
   PlatformSettings,
   Product,
   ProductCategory,
@@ -36,6 +37,13 @@ export interface DataStore {
 
   listEnquiries(opts?: { advisorId?: string }): Promise<Enquiry[]>;
   createEnquiry(data: Omit<Enquiry, "id" | "createdAt">): Promise<Enquiry>;
+
+  /** Per-advisor leads. Always scoped by advisorId; never expose across owners. */
+  listLeads(opts: { advisorId: string }): Promise<Lead[]>;
+  getLeadById(id: string): Promise<Lead | null>;
+  createLead(data: Omit<Lead, "id" | "createdAt">): Promise<Lead>;
+  updateLead(id: string, patch: Partial<Lead>): Promise<Lead | null>;
+  deleteLead(id: string): Promise<boolean>;
 
   getSettings(): Promise<PlatformSettings>;
   updateSettings(patch: Partial<PlatformSettings>): Promise<PlatformSettings>;

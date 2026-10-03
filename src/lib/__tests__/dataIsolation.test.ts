@@ -80,4 +80,31 @@ describe("data isolation", () => {
     expect((await store.getAdvisorBySlug(advisorA.slug))?.id).toBe(advisorA.id);
     expect(await store.getAdvisorBySlug(`${advisorA.slug}-missing`)).toBeNull();
   });
+
+  it("returns only the requested advisor's leads", async () => {
+    const store = getStore();
+    await store.createLead({
+      advisorId: advisorA.id,
+      status: "NEW",
+      planType: "outright",
+      category: "space",
+      isDuo: false,
+      promotion: "none",
+    });
+    await store.createLead({
+      advisorId: advisorB.id,
+      status: "NET",
+      planType: "rental",
+      category: "cuckoo",
+      isDuo: false,
+      promotion: "none",
+    });
+
+    const listA = await store.listLeads({ advisorId: advisorA.id });
+    const listB = await store.listLeads({ advisorId: advisorB.id });
+    expect(listA).toHaveLength(1);
+    expect(listA[0].advisorId).toBe(advisorA.id);
+    expect(listB).toHaveLength(1);
+    expect(listB[0].advisorId).toBe(advisorB.id);
+  });
 });

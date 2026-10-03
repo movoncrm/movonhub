@@ -120,6 +120,8 @@ export interface Product {
   installation?: string;
   status: ProductStatus;
   sourceUrl?: string;
+  /** Traceability to the Phase 5 source document + page/section. */
+  sourceRef?: string;
   sortOrder: number;
   updatedAt: string;
 }
@@ -151,6 +153,58 @@ export interface Enquiry {
   createdAt: string;
 }
 
+/**
+ * Lead pipeline statuses. Only NET counts toward incentive / commission.
+ * The set is a superset of the business' existing X REPLY / X LULUS / X MINAT
+ * language; mapping is provisional pending MOVONHUB confirmation.
+ */
+export type LeadStatus =
+  | "NEW"
+  | "CONTACTED"
+  | "NO_REPLY"
+  | "INTERESTED"
+  | "FORM"
+  | "QUALIFIED"
+  | "NET"
+  | "REJECTED"
+  | "CANCELLED";
+
+export type LeadPlanType = "outright" | "rental";
+
+/** Incentive-relevant product category (Star Advisor scheme). */
+export type LeadCategory = "space" | "baby" | "choice" | "cuckoo" | "vacuum" | "other";
+
+/** Promotion flags that change unit-count rules. */
+export type LeadPromotion = "none" | "rm12" | "samsung" | "joy_pack";
+
+export interface Lead {
+  id: string;
+  advisorId: string;
+  customerName?: string;
+  /** Contact exactly as captured (raw). */
+  contactRaw?: string;
+  /** Normalised Malaysian number in 60XXXXXXXXX form. */
+  contactNormalized?: string;
+  whatsappLink?: string;
+  status: LeadStatus;
+  planType: LeadPlanType;
+  category: LeadCategory;
+  /** MOVON + CUCKOO pair under a Duo sale. */
+  isDuo: boolean;
+  promotion: LeadPromotion;
+  proxyOwner?: string;
+  location?: string;
+  productInterest?: string;
+  productId?: string;
+  remarks?: string;
+  createdAt: string;
+  lastFollowUpAt?: string;
+  /** Set when the sale reaches NET (installation or delivery). */
+  netDate?: string;
+  /** Derived from netDate as YYYY-MM. */
+  incentiveMonth?: string;
+}
+
 export interface PlatformSettings {
   featuredAdvisorSlugs: string[];
   tools: ToolDefinition[];
@@ -171,6 +225,7 @@ export interface DatabaseShape {
   products: Product[];
   promotions: Promotion[];
   enquiries: Enquiry[];
+  leads: Lead[];
   settings: PlatformSettings;
   siteContent: SiteContent[];
   auditLogs: AuditLog[];

@@ -5,6 +5,7 @@ import type {
   ContentLocale,
   ContentScope,
   Enquiry,
+  Lead,
   PlatformSettings,
   Product,
   ProductCategory,
@@ -115,6 +116,7 @@ function productFromRow(r: Row): Product {
     installation: (r.installation as string) || undefined,
     status: r.status as ProductStatus,
     sourceUrl: (r.source_url as string) || undefined,
+    sourceRef: (r.source_ref as string) || undefined,
     sortOrder: Number(r.sort_order ?? 0),
     updatedAt: String(r.updated_at),
   };
@@ -138,6 +140,7 @@ function productToRow(p: Partial<Product>): Row {
   if (p.installation !== undefined) row.installation = p.installation || null;
   if (p.status !== undefined) row.status = p.status;
   if (p.sourceUrl !== undefined) row.source_url = p.sourceUrl || null;
+  if (p.sourceRef !== undefined) row.source_ref = p.sourceRef || null;
   if (p.sortOrder !== undefined) row.sort_order = p.sortOrder;
   row.updated_at = nowISO();
   return row;
@@ -172,6 +175,54 @@ function enquiryFromRow(r: Row): Enquiry {
     status: (r.status as Enquiry["status"]) ?? "new",
     createdAt: String(r.created_at),
   };
+}
+
+function leadFromRow(r: Row): Lead {
+  return {
+    id: String(r.id),
+    advisorId: String(r.advisor_id),
+    customerName: (r.customer_name as string) || undefined,
+    contactRaw: (r.contact_raw as string) || undefined,
+    contactNormalized: (r.contact_normalized as string) || undefined,
+    whatsappLink: (r.whatsapp_link as string) || undefined,
+    status: (r.status as Lead["status"]) ?? "NEW",
+    planType: (r.plan_type as Lead["planType"]) ?? "outright",
+    category: (r.category as Lead["category"]) ?? "space",
+    isDuo: Boolean(r.is_duo),
+    promotion: (r.promotion as Lead["promotion"]) ?? "none",
+    proxyOwner: (r.proxy_owner as string) || undefined,
+    location: (r.location as string) || undefined,
+    productInterest: (r.product_interest as string) || undefined,
+    productId: (r.product_id as string) || undefined,
+    remarks: (r.remarks as string) || undefined,
+    createdAt: String(r.created_at),
+    lastFollowUpAt: (r.last_follow_up_at as string) || undefined,
+    netDate: (r.net_date as string) || undefined,
+    incentiveMonth: (r.incentive_month as string) || undefined,
+  };
+}
+
+function leadToRow(l: Partial<Lead>): Row {
+  const row: Row = {};
+  if (l.advisorId !== undefined) row.advisor_id = l.advisorId;
+  if (l.customerName !== undefined) row.customer_name = l.customerName || null;
+  if (l.contactRaw !== undefined) row.contact_raw = l.contactRaw || null;
+  if (l.contactNormalized !== undefined) row.contact_normalized = l.contactNormalized || null;
+  if (l.whatsappLink !== undefined) row.whatsapp_link = l.whatsappLink || null;
+  if (l.status !== undefined) row.status = l.status;
+  if (l.planType !== undefined) row.plan_type = l.planType;
+  if (l.category !== undefined) row.category = l.category;
+  if (l.isDuo !== undefined) row.is_duo = l.isDuo;
+  if (l.promotion !== undefined) row.promotion = l.promotion;
+  if (l.proxyOwner !== undefined) row.proxy_owner = l.proxyOwner || null;
+  if (l.location !== undefined) row.location = l.location || null;
+  if (l.productInterest !== undefined) row.product_interest = l.productInterest || null;
+  if (l.productId !== undefined) row.product_id = l.productId || null;
+  if (l.remarks !== undefined) row.remarks = l.remarks || null;
+  if (l.lastFollowUpAt !== undefined) row.last_follow_up_at = l.lastFollowUpAt || null;
+  if (l.netDate !== undefined) row.net_date = l.netDate || null;
+  if (l.incentiveMonth !== undefined) row.incentive_month = l.incentiveMonth || null;
+  return row;
 }
 
 function siteContentFromRow(r: Row): SiteContent {
@@ -390,6 +441,45 @@ export class SupabaseStore implements DataStore {
       .single();
     if (error) throw error;
     return enquiryFromRow(row);
+  }
+
+  async listLeads(opts: { advisorId: string }): Promise<Lead[]> {
+    const { data, error } = await sb()
+      .from("leads")
+      .select("*")
+      .eq("advisor_id", opts.advisorId)
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    return (data ?? []).map(leadFromRow);
+  }
+
+  async getLeadById(id: string): Promise<Lead | null> {
+    const { data, error } = await sb().from("leads").select("*").eq("id", id).maybeSingle();
+    if (error) throw error;
+    return data ? leadFromRow(data) : null;
+  }
+
+  async createLead(data: Omit<Lead, "id" | "createdAt">): Promise<Lead> {
+    const { data: row, error } = await sb().from("leads").insert(leadToRow(data)).select("*").single();
+    if (error) throw error;
+    return leadFromRow(row);
+  }
+
+  async updateLead(id: string, patch: Partial<Lead>): Promise<Lead | null> {
+    const { data, error } = await sb()
+      .from("leads")
+      .update({ ...leadToRow(patch), updated_at: nowISO() })
+      .eq("id", id)
+      .select("*")
+      .maybeSingle();
+    if (error) throw error;
+    return data ? leadFromRow(data) : null;
+  }
+
+  async deleteLead(id: string): Promise<boolean> {
+    const { error } = await sb().from("leads").delete().eq("id", id);
+    if (error) throw error;
+    return true;
   }
 
   async getSettings(): Promise<PlatformSettings> {

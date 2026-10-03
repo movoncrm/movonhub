@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { BarChart3, Eye, MessageSquare, Power } from "lucide-react";
+import { BarChart3, Eye, MessageSquare, Power, Users } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import { Badge } from "@/components/ui/Badge";
 import { ButtonLink, Button } from "@/components/ui/Button";
@@ -49,6 +49,9 @@ export default async function DashboardPage() {
           <Logo />
           <div className="flex items-center gap-3">
             <LanguageToggle />
+            <ButtonLink href="/dashboard/leads" variant="secondary" size="sm">
+              <Users className="h-4 w-4" /> {t("leads.title")}
+            </ButtonLink>
             <ButtonLink href="/hub" variant="secondary" size="sm">
               {t("nav.hub")}
             </ButtonLink>

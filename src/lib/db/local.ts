@@ -7,6 +7,7 @@ import type {
   ContentScope,
   DatabaseShape,
   Enquiry,
+  Lead,
   PlatformSettings,
   Product,
   ProductStatus,
@@ -26,6 +27,7 @@ let writeQueue: Promise<void> = Promise.resolve();
 function normalise(db: DatabaseShape): DatabaseShape {
   if (!Array.isArray(db.siteContent)) db.siteContent = [];
   if (!Array.isArray(db.auditLogs)) db.auditLogs = [];
+  if (!Array.isArray(db.leads)) db.leads = [];
   return db;
 }
 
@@ -203,6 +205,46 @@ export class LocalStore implements DataStore {
     db.enquiries.push(record);
     await persist(db);
     return clone(record);
+  }
+
+  async listLeads(opts: { advisorId: string }): Promise<Lead[]> {
+    const db = await load();
+    return clone(db.leads)
+      .filter((lead) => lead.advisorId === opts.advisorId)
+      .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+  }
+
+  async getLeadById(id: string): Promise<Lead | null> {
+    const db = await load();
+    const found = db.leads.find((lead) => lead.id === id);
+    return found ? clone(found) : null;
+  }
+
+  async createLead(data: Omit<Lead, "id" | "createdAt">): Promise<Lead> {
+    const db = await load();
+    const record: Lead = { ...data, id: newId(), createdAt: nowISO() };
+    db.leads.push(record);
+    await persist(db);
+    return clone(record);
+  }
+
+  async updateLead(id: string, patch: Partial<Lead>): Promise<Lead | null> {
+    const db = await load();
+    const idx = db.leads.findIndex((lead) => lead.id === id);
+    if (idx === -1) return null;
+    const next: Lead = { ...db.leads[idx], ...patch, id };
+    db.leads[idx] = next;
+    await persist(db);
+    return clone(next);
+  }
+
+  async deleteLead(id: string): Promise<boolean> {
+    const db = await load();
+    const idx = db.leads.findIndex((lead) => lead.id === id);
+    if (idx === -1) return false;
+    db.leads.splice(idx, 1);
+    await persist(db);
+    return true;
   }
 
   async getSettings(): Promise<PlatformSettings> {

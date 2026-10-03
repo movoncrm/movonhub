@@ -46,7 +46,7 @@ export default async function HubPage() {
   const tools = [
     { key: "ai", icon: Sparkles, status: "soon" as const, href: undefined },
     { key: "commission", icon: Calculator, status: "live" as const, href: "#calculator" },
-    { key: "leads", icon: Users, status: "soon" as const, href: undefined },
+    { key: "leads", icon: Users, status: "live" as const, href: "/dashboard/leads" },
     { key: "knowledge", icon: BookOpen, status: "live" as const, href: "/products" },
     { key: "content", icon: PenLine, status: "soon" as const, href: undefined },
     { key: "followup", icon: Bell, status: "soon" as const, href: undefined },
@@ -152,7 +152,7 @@ export default async function HubPage() {
               </div>
             </Link>
 
-            <Link href="/dashboard#enquiries" className="card-surface block p-5 transition hover:border-primary/40">
+            <Link href="/dashboard/leads" className="card-surface block p-5 transition hover:border-primary/40">
               <div className="flex items-center gap-3">
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <Users className="h-5 w-5" />
