@@ -1,12 +1,12 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { CheckCircle2, Image as ImageIcon, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useI18n } from "@/components/i18n/LanguageProvider";
 import { emptyActionState } from "@/lib/actions";
-import { saveProduct } from "@/app/admin/actions";
+import { removeProductImage, saveProduct } from "@/app/admin/actions";
 import type { Product, ProductCategory } from "@/lib/types";
 
 function Save({ label }: { label: string }) {
@@ -35,6 +35,7 @@ function specsToText(product?: Product): string {
 export function ProductForm({ categories, product }: { categories: ProductCategory[]; product?: Product }) {
   const { t } = useI18n();
   const [state, formAction] = useActionState(saveProduct, emptyActionState);
+  const [preview, setPreview] = useState<string | null>(product?.imageUrl ?? null);
   const err = state.fieldErrors || {};
 
   return (
@@ -80,7 +81,45 @@ export function ProductForm({ categories, product }: { categories: ProductCatego
         </div>
         <div className="sm:col-span-2">
           <label className="field-label">{t("admin.field.imageUrl")}</label>
-          <input name="imageUrl" defaultValue={product?.imageUrl} className="field-input" />
+          <p className="text-xs text-muted">{t("admin.field.imageHint")}</p>
+          <div className="mt-2 flex flex-wrap items-center gap-4">
+            {preview ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={preview}
+                alt=""
+                className="h-20 w-28 rounded-lg border border-borderline bg-background object-contain p-1"
+              />
+            ) : (
+              <span className="flex h-20 w-28 items-center justify-center rounded-lg border border-borderline bg-background text-muted">
+                <ImageIcon className="h-5 w-5" />
+              </span>
+            )}
+            <div className="min-w-[14rem] flex-1">
+              <input
+                name="imageFile"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                className="block w-full text-sm text-muted file:mr-3 file:rounded-lg file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-primary-dark"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  setPreview(file ? URL.createObjectURL(file) : product?.imageUrl ?? null);
+                }}
+              />
+              {err.imageFile && <p className="field-error">{err.imageFile}</p>}
+            </div>
+          </div>
+          <input type="hidden" name="imageUrl" defaultValue={product?.imageUrl ?? ""} />
+          <input type="hidden" name="previousImageUrl" defaultValue={product?.imageUrl ?? ""} />
+          {product?.imageUrl && (
+            <button
+              type="submit"
+              formAction={removeProductImage}
+              className="mt-2 text-sm font-semibold text-destructive hover:underline"
+            >
+              {t("admin.field.removeImage")}
+            </button>
+          )}
         </div>
         <div className="sm:col-span-2">
           <label className="field-label">{t("admin.field.shortDescription")} *</label>

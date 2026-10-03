@@ -15,6 +15,7 @@ import { getStore } from "@/lib/db";
 import { getDictionary, translate } from "@/i18n";
 import { LOCALE_COOKIE } from "@/i18n/config";
 import { getResolvedContent } from "@/lib/content";
+import { resolveProductImageUrl } from "@/lib/assets/url";
 import { THEME_COOKIE } from "@/lib/theme";
 import { resolveAdvisorLocale, resolveAdvisorTheme } from "@/lib/saSettings";
 import { formatRM, safeJsonLd, truncate } from "@/lib/utils";
@@ -262,12 +263,14 @@ export default async function AdvisorPage({ params }: { params: Promise<{ slug: 
             </div>
 
             <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {featured.map(({ product, group }) => (
+              {featured.map(({ product, group }) => {
+                const imageUrl = resolveProductImageUrl(product.imageUrl);
+                return (
                 <article key={product.id} className={`flex flex-col overflow-hidden ${c.card}`}>
                   <div className={`relative aspect-[4/3] overflow-hidden ${c.productImg}`}>
-                    {product.imageUrl ? (
+                    {imageUrl ? (
                       <Image
-                        src={product.imageUrl}
+                        src={imageUrl}
                         alt={product.name}
                         fill
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -306,7 +309,8 @@ export default async function AdvisorPage({ params }: { params: Promise<{ slug: 
                     />
                   </div>
                 </article>
-              ))}
+                );
+              })}
             </div>
 
             <div className="mt-6">

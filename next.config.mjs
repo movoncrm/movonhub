@@ -14,8 +14,9 @@ const nextConfig = {
     // optimisation enabled.
     unoptimized: process.env.NEXT_PUBLIC_UNOPTIMIZED_IMAGES === "true",
     remotePatterns: [
-      { protocol: "https", hostname: "movon.com.my" },
-      { protocol: "https", hostname: "www.movon.com.my" },
+      // MOVONHUB-managed assets (Cloudflare R2 behind a custom domain). Product
+      // images must not be hot-linked from third-party hosts.
+      { protocol: "https", hostname: "assets.movonhub.com.my" },
       { protocol: "https", hostname: "*.supabase.co" },
     ],
   },

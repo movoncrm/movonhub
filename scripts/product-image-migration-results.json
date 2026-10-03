@@ -1,0 +1,179 @@
+{
+  "mode": "remote",
+  "generatedAt": "2026-10-03T12:28:12.560Z",
+  "summary": {
+    "migrated-r2": 17
+  },
+  "results": [
+    {
+      "productId": "prod_hypermate",
+      "key": "products/prod_hypermate/hypermate-station-1200x800.png",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2026/08/Hypermate-01-1200x800.png",
+      "reachable": true,
+      "httpStatus": 200,
+      "sourceContentType": "image/png",
+      "sourceBytes": 1340381,
+      "status": "migrated-r2"
+    },
+    {
+      "productId": "prod_hydromate",
+      "key": "products/prod_hydromate/hydromate-ultra-station-1200x800.png",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2026/08/Hydromate-1-1200x800.png",
+      "reachable": true,
+      "httpStatus": 200,
+      "sourceContentType": "image/png",
+      "sourceBytes": 1245536,
+      "status": "migrated-r2"
+    },
+    {
+      "productId": "prod_duomateplus",
+      "key": "products/prod_duomateplus/duomateplus-10-7-1200x800.png",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2026/01/DuoMateplus-featureimg-1200x800.png",
+      "reachable": true,
+      "httpStatus": 200,
+      "sourceContentType": "image/png",
+      "sourceBytes": 973726,
+      "status": "migrated-r2"
+    },
+    {
+      "productId": "prod_washmate",
+      "key": "products/prod_washmate/washmate-9kg-1200x800.png",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2025/03/washmate-landing-image.png",
+      "reachable": true,
+      "httpStatus": 200,
+      "sourceContentType": "image/png",
+      "sourceBytes": 611557,
+      "status": "migrated-r2"
+    },
+    {
+      "productId": "prod_duomate",
+      "key": "products/prod_duomate/duomate-10-6-1200x800.png",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2024/06/Movon-Duamate-1200x800.png",
+      "reachable": true,
+      "httpStatus": 200,
+      "sourceContentType": "image/png",
+      "sourceBytes": 1340176,
+      "status": "migrated-r2"
+    },
+    {
+      "productId": "prod_chillmateplus",
+      "key": "products/prod_chillmateplus/chillmateplus-601l-1200x800.png",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2026/01/ChillMate-plus-featureimg-1200x800.png",
+      "reachable": true,
+      "httpStatus": 200,
+      "sourceContentType": "image/png",
+      "sourceBytes": 1212014,
+      "status": "migrated-r2"
+    },
+    {
+      "productId": "prod_coolmate",
+      "key": "products/prod_coolmate/coolmate-418l-1200x800.png",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2025/10/coolmate-landing-banner102025.png",
+      "reachable": true,
+      "httpStatus": 200,
+      "sourceContentType": "image/png",
+      "sourceBytes": 558744,
+      "status": "migrated-r2"
+    },
+    {
+      "productId": "prod_chillmate",
+      "key": "products/prod_chillmate/chillmate-508l-1200x800.png",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2024/06/Movon-Chillmate-1200x800.png",
+      "reachable": true,
+      "httpStatus": 200,
+      "sourceContentType": "image/png",
+      "sourceBytes": 728936,
+      "status": "migrated-r2"
+    },
+    {
+      "productId": "prod_lockmate",
+      "key": "products/prod_lockmate/lockmate-smart-lock-1200x800.png",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2025/06/Movon-smartlock-feature-landing.png",
+      "reachable": true,
+      "httpStatus": 200,
+      "sourceContentType": "image/png",
+      "sourceBytes": 363553,
+      "status": "migrated-r2"
+    },
+    {
+      "productId": "prod_snowmate",
+      "key": "products/prod_snowmate/snowmate-aircon-1200x800.png",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2025/05/Movon-aircon-feature-002-1200x800.png",
+      "reachable": true,
+      "httpStatus": 200,
+      "sourceContentType": "image/png",
+      "sourceBytes": 1204226,
+      "status": "migrated-r2"
+    },
+    {
+      "productId": "prod_stroller",
+      "key": "products/prod_stroller/movon-stroller-1204x800.png",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2025/12/Movon-Stroller-feature-122025A-1204x800.png",
+      "reachable": true,
+      "httpStatus": 200,
+      "sourceContentType": "image/png",
+      "sourceBytes": 350201,
+      "status": "migrated-r2"
+    },
+    {
+      "productId": "prod_carseat",
+      "key": "products/prod_carseat/movon-car-seat-2026-1200x800.png",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2026/03/movon-car-seat-2026-1200x800.png",
+      "reachable": true,
+      "httpStatus": 200,
+      "sourceContentType": "image/png",
+      "sourceBytes": 460730,
+      "status": "migrated-r2"
+    },
+    {
+      "productId": "prod_care",
+      "key": "products/prod_care/movon-care-1200x800.png",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2024/07/Movon-Care-1200x800.png",
+      "reachable": true,
+      "httpStatus": 200,
+      "sourceContentType": "image/png",
+      "sourceBytes": 610051,
+      "status": "migrated-r2"
+    },
+    {
+      "productId": "prod_expert_single",
+      "key": "products/prod_expert_single/movon-expert.png",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2024/06/MOVON-Expert-logo.png",
+      "reachable": true,
+      "httpStatus": 200,
+      "sourceContentType": "image/png",
+      "sourceBytes": 24848,
+      "status": "migrated-r2"
+    },
+    {
+      "productId": "prod_expert_six",
+      "key": "products/prod_expert_six/movon-expert.png",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2024/06/MOVON-Expert-logo.png",
+      "reachable": true,
+      "httpStatus": 200,
+      "sourceContentType": "image/png",
+      "sourceBytes": 24848,
+      "status": "migrated-r2"
+    },
+    {
+      "productId": "prod_expert_twelve",
+      "key": "products/prod_expert_twelve/movon-expert.png",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2024/06/MOVON-Expert-logo.png",
+      "reachable": true,
+      "httpStatus": 200,
+      "sourceContentType": "image/png",
+      "sourceBytes": 24848,
+      "status": "migrated-r2"
+    },
+    {
+      "productId": "prod_expert_mattress",
+      "key": "products/prod_expert_mattress/movon-expert.png",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2024/06/MOVON-Expert-logo.png",
+      "reachable": true,
+      "httpStatus": 200,
+      "sourceContentType": "image/png",
+      "sourceBytes": 24848,
+      "status": "migrated-r2"
+    }
+  ]
+}

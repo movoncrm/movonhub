@@ -645,6 +645,8 @@ const en: Dictionary = {
       series: "Series",
       model: "Model",
       imageUrl: "Image URL",
+      imageHint: "JPG, PNG or WebP up to 5MB. Uploading replaces the current image and stores it on MOVONHUB assets.",
+      removeImage: "Remove image",
       shortDescription: "Short description",
       fullDescription: "Full description",
       features: "Features (one per line)",

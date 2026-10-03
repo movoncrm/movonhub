@@ -1,8 +1,16 @@
-import type { DatabaseShape } from "@/lib/types";
+import type { DatabaseShape, Product } from "@/lib/types";
+import { resolveProductImageUrl } from "@/lib/assets/url";
 import { hashPassword } from "@/lib/auth/password";
 
 const MOVON = "https://movon.com.my";
 const IMG = `${MOVON}/wp-content/uploads`;
+
+/** Map seeded source images to MOVONHUB-managed asset URLs (see manifest). */
+function managedImage(product: Product): Product {
+  return product.imageUrl
+    ? { ...product, imageUrl: resolveProductImageUrl(product.imageUrl) }
+    : product;
+}
 
 export const DEMO_ADVISOR_PASSWORD = "movon123";
 
@@ -122,7 +130,7 @@ export function buildSeed(): DatabaseShape {
       },
     ],
 
-    products: [
+    products: ([
       {
         id: "prod_hypermate",
         slug: "hypermate",
@@ -442,7 +450,7 @@ export function buildSeed(): DatabaseShape {
         sortOrder: 4,
         updatedAt: now,
       },
-    ],
+    ] satisfies Product[]).map(managedImage),
 
     // Seeded as inactive pending verification of mechanics/dates.
     promotions: [

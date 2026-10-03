@@ -29,8 +29,8 @@ Domains: `movonhub.com.my`, `www.movonhub.com.my`, `*.movonhub.com.my`
 Versions in use: Next `15.5.x`, React `19.3`, `@opennextjs/cloudflare` `1.x`, `wrangler` `4.x`.
 
 **DONE (local):** `npm run cf:build` produces `.open-next/worker.js`, and
-`npx wrangler deploy --dry-run` validates the Worker (91 asset files, `ASSETS`
-binding) without deploying.
+`npx wrangler deploy --dry-run` validates the Worker (103 asset files, `ASSETS`
+and `R2_ASSETS` bindings) without deploying.
 
 ---
 
@@ -43,6 +43,9 @@ binding) without deploying.
 | `.dev.vars.example` | Local secret template for `wrangler`/preview — copy to `.dev.vars` (gitignored) |
 | `.env.example` | Local dev template |
 | `next.config.mjs` | `NEXT_PUBLIC_UNOPTIMIZED_IMAGES` flag (Workers have no Next image optimizer) |
+| `wrangler.jsonc` | Also declares the `R2_ASSETS` bucket binding for product assets |
+| `docs/R2_ASSET_SETUP.md` | Cloudflare R2 asset storage setup, migration and rollback |
+| `scripts/migrate-product-images.mjs` | One-time migration of product images into R2 |
 
 ## 3. Scripts
 
@@ -240,7 +243,8 @@ For `cf:preview`, copy `.dev.vars.example` to `.dev.vars` and fill in values.
   Web Crypto **PBKDF2** or delegate auth to **Supabase Auth**. Test on
   `cf:preview` before production.
 - **Image optimisation:** disabled on Workers (`NEXT_PUBLIC_UNOPTIMIZED_IMAGES=true`).
-  Consider Cloudflare Images or a custom loader for production.
+  Product images are served directly from Cloudflare R2 via
+  `https://assets.movonhub.com.my` (see `docs/R2_ASSET_SETUP.md`).
 - **Rate limiting** is in-memory (per isolate) — a Durable Object or KV-backed
   limiter is recommended at scale.
 - **File uploads** must go to Supabase Storage in production (local writes to
@@ -254,7 +258,8 @@ For `cf:preview`, copy `.dev.vars.example` to `.dev.vars` and fill in values.
 ## 10. Verification performed (local)
 
 - `npm run cf:build` → `.open-next/worker.js` generated (OpenNext build complete).
-- `npx wrangler deploy --dry-run` → config valid; 91 asset files; `ASSETS` binding.
+- `npx wrangler deploy --dry-run` → config valid; 103 asset files; `ASSETS` and
+  `R2_ASSETS` bindings.
 - `npm run build`, `npm run typecheck`, `npm run lint`, `npm run test` all pass.
 - Runtime (dev): default Malay, `mh_lang=en` renders English, `/sa/nik` works,
   `/sa/syuhadamc` → 404, subdomain rewrite works, sitemap lists only active advisors.

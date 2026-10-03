@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { isManagedAssetUrl } from "./assets/url";
 import { normaliseMyPhone } from "./utils";
 
 /** Routes and names that must never be used as an advisor slug. */
@@ -164,7 +165,16 @@ export const productSchema = z.object({
   categoryId: z.string().trim().min(1, "Choose a category."),
   series: z.string().trim().max(40).optional().or(z.literal("")),
   model: z.string().trim().max(60).optional().or(z.literal("")),
-  imageUrl: z.string().trim().max(500).optional().or(z.literal("")),
+  // Only MOVONHUB-managed asset URLs (R2 or local dev uploads) are allowed so
+  // product images cannot be hot-linked from third-party hosts.
+  imageUrl: z
+    .string()
+    .trim()
+    .max(500)
+    .refine((value) => value === "" || isManagedAssetUrl(value), {
+      message: "Use the upload button to add a product image.",
+    })
+    .optional(),
   shortDescription: z.string().trim().min(2).max(300),
   fullDescription: z.string().trim().max(2000).optional().or(z.literal("")),
   features: z.array(z.string().trim().max(160)).default([]),

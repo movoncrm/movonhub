@@ -15,6 +15,12 @@
 .dev.vars
 .dev.vars.local
 
+# sensitive local database artifacts (contain credentials / full dumps)
+backup sql.txt
+migration 0003.txt
+movonhub-backup.sql
+*.dump
+
 # cloudflare
 .open-next/
 .wrangler/

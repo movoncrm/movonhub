@@ -653,6 +653,8 @@ const ms = {
       series: "Siri",
       model: "Model",
       imageUrl: "URL imej",
+      imageHint: "JPG, PNG atau WebP sehingga 5MB. Memuat naik akan menggantikan imej semasa dan menyimpannya pada aset MOVONHUB.",
+      removeImage: "Buang imej",
       shortDescription: "Penerangan ringkas",
       fullDescription: "Penerangan penuh",
       features: "Ciri (satu setiap baris)",

@@ -21,6 +21,13 @@ import { slugify } from "@/lib/utils";
 import type { AdvisorStatus, AdvisorTheme, ContentLocale, ProductStatus, RentalPlan } from "@/lib/types";
 import { getI18n } from "@/i18n/server";
 import { logAudit } from "@/lib/audit";
+import {
+  deleteAssetByUrl,
+  isManagedAssetUrl,
+  resolveProductImageUrl,
+  uploadProductImage,
+  type AssetResult,
+} from "@/lib/assets";
 import { consumeLimit } from "@/lib/rateLimit";
 import { contentKeysForScope } from "@/lib/content/registry";
 
@@ -97,15 +104,35 @@ function revalidateAll() {
 }
 
 export async function saveProduct(_prev: ActionState, formData: FormData): Promise<ActionState> {
-  if (!(await requireAdmin())) return { error: await adminMsg("auth.adminOnly") };
+  const session = await requireAdmin();
+  if (!session) return { error: await adminMsg("auth.adminOnly") };
   const id = String(formData.get("id") || "");
+  const name = String(formData.get("name") || "");
+  const slug = String(formData.get("slug") || "").trim() || slugify(name);
+  const previousImageUrl = String(formData.get("previousImageUrl") || "");
+
+  // Resolve known legacy MOVON hot-links to MOVONHUB asset URLs so existing
+  // rows can still be edited before the one-time migration has run.
+  let imageUrl = resolveProductImageUrl(String(formData.get("imageUrl") || "")) || "";
+  let uploaded: AssetResult | undefined;
+
+  const imageFile = formData.get("imageFile");
+  if (imageFile instanceof File && imageFile.size > 0) {
+    uploaded = await uploadProductImage(imageFile, id || slug);
+    if (!uploaded.ok) {
+      const message = uploaded.error || "Image upload failed.";
+      return { error: message, fieldErrors: { imageFile: message } };
+    }
+    imageUrl = uploaded.url || "";
+  }
+
   const parsed = productSchema.safeParse({
-    name: String(formData.get("name") || ""),
-    slug: String(formData.get("slug") || "").trim() || slugify(String(formData.get("name") || "")),
+    name,
+    slug,
     categoryId: String(formData.get("categoryId") || ""),
     series: String(formData.get("series") || ""),
     model: String(formData.get("model") || ""),
-    imageUrl: String(formData.get("imageUrl") || ""),
+    imageUrl,
     shortDescription: String(formData.get("shortDescription") || ""),
     fullDescription: String(formData.get("fullDescription") || ""),
     features: lines(formData.get("features")),
@@ -119,6 +146,8 @@ export async function saveProduct(_prev: ActionState, formData: FormData): Promi
     sourceUrl: String(formData.get("sourceUrl") || ""),
   });
   if (!parsed.success) {
+    // Do not leave an orphaned upload behind when the rest of the form is invalid.
+    if (uploaded?.url) await deleteAssetByUrl(uploaded.url);
     return { error: await adminMsg("auth.fixFields"), fieldErrors: flatten(parsed.error) };
   }
   const input = parsed.data;
@@ -135,9 +164,38 @@ export async function saveProduct(_prev: ActionState, formData: FormData): Promi
   } else {
     await store.createProduct({ ...payload, sortOrder: 99 });
   }
+
+  // Clean up the replaced managed asset only after the database write succeeds.
+  if (uploaded?.key && previousImageUrl && previousImageUrl !== imageUrl && isManagedAssetUrl(previousImageUrl)) {
+    await deleteAssetByUrl(previousImageUrl);
+  }
+
+  if (uploaded?.key) {
+    await logAudit(session, "product.image_uploaded", { type: "product", id: id || input.slug }, {
+      key: uploaded.key,
+      product: input.slug,
+      size: imageFile instanceof File ? imageFile.size : undefined,
+    });
+  }
+
   revalidateAll();
   revalidatePath(`/products/${input.slug}`);
   return { ok: true, message: id ? "Product updated." : "Product created." };
+}
+
+/** Remove a product image from R2/MOVONHUB storage and clear it on the product. */
+export async function removeProductImage(formData: FormData): Promise<void> {
+  const session = await requireAdmin();
+  if (!session) redirect("/login");
+  const id = String(formData.get("id") || "");
+  const imageUrl = String(formData.get("imageUrl") || "");
+  if (!id) return;
+
+  await getStore().updateProduct(id, { imageUrl: "" });
+  if (isManagedAssetUrl(imageUrl)) await deleteAssetByUrl(imageUrl);
+  await logAudit(session, "product.image_removed", { type: "product", id }, { url: imageUrl });
+  revalidateAll();
+  revalidatePath("/products");
 }
 
 export async function deleteProduct(formData: FormData): Promise<void> {

@@ -1,32 +1,43 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "movonhub",
-  "main": ".open-next/worker.js",
-  "compatibility_date": "2025-03-25",
-  "compatibility_flags": ["nodejs_compat"],
-  "assets": {
-    "directory": ".open-next/assets",
-    "binding": "ASSETS"
-  },
-  // Non-secret runtime configuration. Secrets (SUPABASE_SERVICE_ROLE_KEY,
-  // SESSION_SECRET, ADMIN_PASSWORD, NEXT_PUBLIC_SUPABASE_URL) are set with
-  // `wrangler secret put` so they are not committed.
-  "vars": {
-    "DATA_ADAPTER": "supabase",
-    "NEXT_PUBLIC_SITE_URL": "https://movonhub.com.my",
-    "NEXT_PUBLIC_ROOT_DOMAIN": "movonhub.com.my",
-    "NEXT_PUBLIC_UNOPTIMIZED_IMAGES": "true"
-  },
-  // Custom domains are configured in the Cloudflare dashboard / via `wrangler`.
-  // The wildcard record (*.movonhub.com.my) requires a wildcard DNS record and a
-  // wildcard/san certificate before it can be attached. See
-  // docs/DEPLOYMENT_CLOUDFLARE.md. Uncomment once the zone is ready.
-  "routes": [
-    // { "pattern": "movonhub.com.my", "custom_domain": true },
-    // { "pattern": "www.movonhub.com.my", "custom_domain": true },
-    // { "pattern": "*.movonhub.com.my", "custom_domain": true }
-  ],
-  "observability": {
-    "enabled": true
-  }
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "movonhub",
+	"main": ".open-next/worker.js",
+	"compatibility_date": "2025-03-25",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"assets": {
+		"directory": ".open-next/assets",
+		"binding": "ASSETS"
+	},
+	// R2 bucket for MOVONHUB-managed product/advisor assets.
+	// Bound as R2_ASSETS because ASSETS is reserved for OpenNext static assets.
+	// Public reads use https://assets.movonhub.com.my.
+	// The R2 management API is never exposed to the browser.
+	"r2_buckets": [
+		{
+			"binding": "R2_ASSETS",
+			"bucket_name": "movonhub-assets"
+		}
+	],
+	// Non-secret runtime configuration.
+	// Secrets are configured using wrangler secret put.
+	"vars": {
+		"DATA_ADAPTER": "supabase",
+		"NEXT_PUBLIC_SITE_URL": "https://movonhub.com.my",
+		"NEXT_PUBLIC_ROOT_DOMAIN": "movonhub.com.my",
+		"NEXT_PUBLIC_UNOPTIMIZED_IMAGES": "true",
+		"NEXT_PUBLIC_ASSETS_BASE_URL": "https://assets.movonhub.com.my"
+	},
+	// Custom domains are configured in the Cloudflare dashboard / via wrangler.
+	// The wildcard record requires a wildcard DNS record and certificate.
+	// See docs/DEPLOYMENT_CLOUDFLARE.md.
+	"routes": [
+		// { "pattern": "movonhub.com.my", "custom_domain": true },
+		// { "pattern": "www.movonhub.com.my", "custom_domain": true },
+		// { "pattern": "*.movonhub.com.my", "custom_domain": true }
+	],
+	"observability": {
+		"enabled": true
+	}
 }

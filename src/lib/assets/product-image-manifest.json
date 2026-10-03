@@ -1,0 +1,126 @@
+{
+  "note": "Canonical mapping of legacy MOVON product image sources to MOVONHUB R2 object keys. Consumed by the app (legacy read-time resolution) and scripts/migrate-product-images.mjs (one-time upload). No secrets.",
+  "bucket": "movonhub-assets",
+  "prefix": "products",
+  "images": [
+    {
+      "productId": "prod_hypermate",
+      "productSlug": "hypermate",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2026/08/Hypermate-01-1200x800.png",
+      "key": "products/prod_hypermate/hypermate-station-1200x800.png",
+      "status": "pending"
+    },
+    {
+      "productId": "prod_hydromate",
+      "productSlug": "hydromate",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2026/08/Hydromate-1-1200x800.png",
+      "key": "products/prod_hydromate/hydromate-ultra-station-1200x800.png",
+      "status": "pending"
+    },
+    {
+      "productId": "prod_duomateplus",
+      "productSlug": "movon-duomateplus-mseries",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2026/01/DuoMateplus-featureimg-1200x800.png",
+      "key": "products/prod_duomateplus/duomateplus-10-7-1200x800.png",
+      "status": "pending"
+    },
+    {
+      "productId": "prod_washmate",
+      "productSlug": "movon-space-washmate",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2025/03/washmate-landing-image.png",
+      "key": "products/prod_washmate/washmate-9kg-1200x800.png",
+      "status": "pending"
+    },
+    {
+      "productId": "prod_duomate",
+      "productSlug": "movon-space-duo-mate",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2024/06/Movon-Duamate-1200x800.png",
+      "key": "products/prod_duomate/duomate-10-6-1200x800.png",
+      "status": "pending"
+    },
+    {
+      "productId": "prod_chillmateplus",
+      "productSlug": "movon-chillmateplus-mseries",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2026/01/ChillMate-plus-featureimg-1200x800.png",
+      "key": "products/prod_chillmateplus/chillmateplus-601l-1200x800.png",
+      "status": "pending"
+    },
+    {
+      "productId": "prod_coolmate",
+      "productSlug": "movon-space-coolmate",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2025/10/coolmate-landing-banner102025.png",
+      "key": "products/prod_coolmate/coolmate-418l-1200x800.png",
+      "status": "pending"
+    },
+    {
+      "productId": "prod_chillmate",
+      "productSlug": "movon-space-chill-mate",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2024/06/Movon-Chillmate-1200x800.png",
+      "key": "products/prod_chillmate/chillmate-508l-1200x800.png",
+      "status": "pending"
+    },
+    {
+      "productId": "prod_lockmate",
+      "productSlug": "movon-space-lockmate",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2025/06/Movon-smartlock-feature-landing.png",
+      "key": "products/prod_lockmate/lockmate-smart-lock-1200x800.png",
+      "status": "pending"
+    },
+    {
+      "productId": "prod_snowmate",
+      "productSlug": "movon-space-snowmate",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2025/05/Movon-aircon-feature-002-1200x800.png",
+      "key": "products/prod_snowmate/snowmate-aircon-1200x800.png",
+      "status": "pending"
+    },
+    {
+      "productId": "prod_stroller",
+      "productSlug": "movon-stroller",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2025/12/Movon-Stroller-feature-122025A-1204x800.png",
+      "key": "products/prod_stroller/movon-stroller-1204x800.png",
+      "status": "pending"
+    },
+    {
+      "productId": "prod_carseat",
+      "productSlug": "movon-car-seat",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2026/03/movon-car-seat-2026-1200x800.png",
+      "key": "products/prod_carseat/movon-car-seat-2026-1200x800.png",
+      "status": "pending"
+    },
+    {
+      "productId": "prod_care",
+      "productSlug": "movoncare",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2024/07/Movon-Care-1200x800.png",
+      "key": "products/prod_care/movon-care-1200x800.png",
+      "status": "pending"
+    },
+    {
+      "productId": "prod_expert_single",
+      "productSlug": "expert-baby-gear-cleaning-single",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2024/06/MOVON-Expert-logo.png",
+      "key": "products/prod_expert_single/movon-expert.png",
+      "status": "pending"
+    },
+    {
+      "productId": "prod_expert_six",
+      "productSlug": "expert-baby-gear-cleaning-6",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2024/06/MOVON-Expert-logo.png",
+      "key": "products/prod_expert_six/movon-expert.png",
+      "status": "pending"
+    },
+    {
+      "productId": "prod_expert_twelve",
+      "productSlug": "expert-baby-gear-cleaning-12",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2024/06/MOVON-Expert-logo.png",
+      "key": "products/prod_expert_twelve/movon-expert.png",
+      "status": "pending"
+    },
+    {
+      "productId": "prod_expert_mattress",
+      "productSlug": "expert-baby-mattress-cleaning",
+      "sourceUrl": "https://movon.com.my/wp-content/uploads/2024/06/MOVON-Expert-logo.png",
+      "key": "products/prod_expert_mattress/movon-expert.png",
+      "status": "pending"
+    }
+  ]
+}

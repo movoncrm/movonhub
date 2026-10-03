@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/Badge";
 import { ButtonLink } from "@/components/ui/Button";
 import { ProductCard } from "@/components/catalogue/ProductCard";
 import { getProductDetail } from "@/lib/services/catalogue";
+import { resolveProductImageUrl } from "@/lib/assets/url";
 import { getI18n } from "@/i18n/server";
 import { formatRM, truncate } from "@/lib/utils";
 
@@ -17,6 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const detail = await getProductDetail(slug);
   if (!detail) return { title: "Product not found" };
   const { product } = detail;
+  const imageUrl = resolveProductImageUrl(product.imageUrl);
   return {
     title: product.name,
     description: truncate(product.shortDescription, 160),
@@ -24,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     openGraph: {
       title: product.name,
       description: truncate(product.shortDescription, 200),
-      images: product.imageUrl ? [{ url: product.imageUrl }] : undefined,
+      images: imageUrl ? [{ url: imageUrl }] : undefined,
     },
   };
 }
@@ -34,6 +36,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   const [{ t }, detail] = await Promise.all([getI18n(), getProductDetail(slug)]);
   if (!detail) notFound();
   const { product, category, related } = detail;
+  const imageUrl = resolveProductImageUrl(product.imageUrl);
 
   return (
     <div className="container-page py-10">
@@ -46,9 +49,9 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
       <div className="mt-6 grid gap-10 lg:grid-cols-2">
         <div className="relative aspect-square overflow-hidden rounded-3xl border border-borderline bg-background">
-          {product.imageUrl ? (
+          {imageUrl ? (
             <Image
-              src={product.imageUrl}
+              src={imageUrl}
               alt={product.name}
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"

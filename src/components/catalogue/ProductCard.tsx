@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
+import { resolveProductImageUrl } from "@/lib/assets/url";
 import { getI18n } from "@/i18n/server";
 import { formatRM } from "@/lib/utils";
 import type { Product } from "@/lib/types";
@@ -19,13 +20,14 @@ export async function ProductCard({
   const lowestPlan = product.rentalPlans.length
     ? Math.min(...product.rentalPlans.map((p) => p.monthlyPrice))
     : null;
+  const imageUrl = resolveProductImageUrl(product.imageUrl);
 
   return (
     <article className={`card-surface group flex flex-col overflow-hidden ${className ?? ""}`}>
       <Link href={`/products/${product.slug}`} className="relative block aspect-[4/3] overflow-hidden bg-background">
-        {product.imageUrl ? (
+        {imageUrl ? (
           <Image
-            src={product.imageUrl}
+            src={imageUrl}
             alt={product.name}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
